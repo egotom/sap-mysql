@@ -4,8 +4,14 @@ sapper bootstrap mysql gnews
 
 
 ## Getting started
-
-
+```bash
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/egotom/sap-mysql.git
+git push -u origin main
+```
 ### Using `degit`
 
 [`degit`](https://github.com/Rich-Harris/degit) is a scaffolding tool that lets you create a directory from a branch in a repository. Use either the `rollup` or `webpack` branch in `sapper-template`:
