@@ -2,6 +2,12 @@
 	<title>About</title>
 </svelte:head>
 
-<h1>About this site</h1>
-
-<p>This is the 'about' page. There's not much here.</p>
+<div class="row mt-5">
+	<div class="col-12">
+		<div class="d-flex flex-nowrap bd-highlight">
+			<div class="order-3 p-2 bd-highlight">First flex item</div>
+			<div class="order-2 p-2 bd-highlight">Second flex item</div>
+			<div class="order-1 p-2 bd-highlight">Third flex item</div>
+		</div>
+	</div>
+</div>

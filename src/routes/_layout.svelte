@@ -3,14 +3,14 @@
 	export let segment;
 	let adv=true,hots=true,pfo=true,sdb=true;
 	const onFocus =()=>{hots=false;adv=true;pfo=true};
-	const onBlur =()=>hots=true;
+	const onBlur =()=>{hots=true};
 	const onPfo=()=>{pfo=!pfo;adv=true;hots=true};
 	const onAdv=()=>{adv=!adv;pfo=true;hots=true};
 	const onSdb=()=>{sdb=!sdb};
 </script>
-<div class="container-fluid mb-5 fixed-top bg-white">
+<div class="container-fluid mb-5 fixed-top bg-white justify-content-md-between justify-content-sm-between">
 <nav class="row py-2 shadow">
-	<div class="col-md-3 col-sm-2 d-flex justify-content-start">
+	<div class="col-md-3 col-lg-3 order-md-0 order-sm-0  col-sm-4 d-flex justify-content-start">
 		<a class="btn" on:click={onSdb} href=" ">
 			<svg width="1.7em" height="1.7em" viewBox="0 0 16 16" class="bi bi-list" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
 				<path fill-rule="evenodd" d="M2.5 11.5A.5.5 0 0 1 3 11h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 3 7h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4A.5.5 0 0 1 3 3h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
@@ -18,8 +18,8 @@
 		</a>
 		<a class="navbar-brand text-warning" href=" ">Sibelly</a>
 	</div>
-	<div class="col-md-6 col-sm-8">
-	<div class="input-group mx-5 straight" id="navbarCollapse">        
+	<div class="col-md-6 col-lg-6 order-md-1 order-sm-2  col-sm-12 px-2 px-sm-3">
+	<div class="input-group  straight" id="navbarCollapse">        
         <span class="input-group-prepend">
           <button class="btn border-right-0 border bg-light" type="button">
                 <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-search" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -88,7 +88,7 @@
 		</div>
 	</div>
 	</div>
-	<div class="col-md-3 col-sm-2 d-flex justify-content-end">
+	<div class="col-md-3 col-lg-3 order-md-2 order-sm-1 col-sm-8 d-flex justify-content-end">
 		<a href=" " class="avatar rounded-circle" on:click={onPfo}>
 			<img alt="Image" src="https://demos.creative-tim.com/argon-dashboard-pro/assets/img/theme/team-4.jpg">
 		</a>
@@ -124,19 +124,17 @@
 </div>
 
 {#if sdb}
-<div class="container-fluid mt-5">
-	<div class="row">
+<div class="container-fluid mt-5 pt-3">
+	<div class="row mt-1 mt-lg-1 mt-sm-5">
 		<Nav {segment}/>
-	</div>
-	<main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
 		<slot></slot>
-	</main>
+	</div>
 </div>
 {:else}
-<div class="container mt-5">
-	<main role="main" class="px-md-4">
+<div class="container mt-5 pt-3">
+	<div class="row mt-1 mt-lg-1 mt-sm-5">
 		<slot></slot>
-	</main>
+	</div>
 </div>
 {/if}
 <style>
