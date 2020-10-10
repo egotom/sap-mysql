@@ -1,11 +1,65 @@
 
 <svelte:head>
-	<title>Sapper project template</title>
+	<title>热门</title>
 </svelte:head>
-<div class="align-items-center">
-	<h1 class="h2">Dashboard</h1>
+<div class="row pt-3">
+	<div class="col-lg-8 col-md-8 col-sm-12 px-md-2 px-sm-3">
+		<div class="d-flex justify-content-between px-3 mb-3">
+			<h4>热门</h4>
+			<a href=" ">更多热门</a>
+		</div>
+		
+		<div class="row border rounded-lg shadow-sm p-3 mb-4">
+			<div class="col-9">
+				<h2>Heading</h2>
+				<p>Donec sed odio dui. Etiam porta sem malesuada magna mollis euismod. Nullam id dolor id nibh ultricies vehicula ut id elit. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Praesent commodo cursus magna.</p>
+				<p>Donec sed odio dui. Etiam porta sem malesuada magna mollis euismod. Nullam id dolor id nibh ultricies vehicula ut id elit. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Praesent commodo cursus magna.</p>
+				<p><a class=" " href=" " role="button">View details &raquo;</a></p>
+			</div>
+			<div class="col-3 text-center">
+				<svg class="bd-placeholder-img rounded-lg mt-3" width="150" height="150" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: 140x140"><title>Placeholder</title><rect width="100%" height="100%" fill="#777"/><text x="50%" y="50%" fill="#777" dy=".3em">140x140</text></svg>
+			</div>				
+		</div>
+		<div class="row border rounded-lg shadow-sm p-3 mb-4">
+			<div class="col-9">
+				<h2>Heading</h2>
+				<p>Donec sed odio dui. Etiam porta sem malesuada magna mollis euismod. Nullam id dolor id nibh ultricies vehicula ut id elit. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Praesent commodo cursus magna.</p>
+				<p>Donec sed odio dui. Etiam porta sem malesuada magna mollis euismod. Nullam id dolor id nibh ultricies vehicula ut id elit. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Praesent commodo cursus magna.</p>
+				<p><a class=" " href=" " role="button">View details &raquo;</a></p>
+			</div>
+			<div class="col-3 text-center">
+				<svg class="bd-placeholder-img rounded-lg mt-3" width="150" height="150" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: 140x140"><title>Placeholder</title><rect width="100%" height="100%" fill="#777"/><text x="50%" y="50%" fill="#777" dy=".3em">140x140</text></svg>
+			</div>				
+		</div>
+		<div class="row border rounded-lg shadow-sm p-3 mb-4">
+			<div class="col-9">
+				<h2>Heading</h2>
+				<p>Donec sed odio dui. Etiam porta sem malesuada magna mollis euismod. Nullam id dolor id nibh ultricies vehicula ut id elit. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Praesent commodo cursus magna.</p>
+				<p>Donec sed odio dui. Etiam porta sem malesuada magna mollis euismod. Nullam id dolor id nibh ultricies vehicula ut id elit. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Praesent commodo cursus magna.</p>
+				<p><a class=" " href=" " role="button">View details &raquo;</a></p>
+			</div>
+			<div class="col-3 text-center">
+				<svg class="bd-placeholder-img rounded-lg mt-3" width="150" height="150" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: 140x140"><title>Placeholder</title><rect width="100%" height="100%" fill="#777"/><text x="50%" y="50%" fill="#777" dy=".3em">140x140</text></svg>
+			</div>				
+		</div>
+
+	</div>
+	<div class="col-lg-4 col-md-4 col-sm-12 pt-5 px-md-5 px-sm-3">
+		<div class="border rounded-lg shadow-sm p-3 mb-4 mt-1">
+			<h4>我的宝物</h4>
+			<div class="border-bottom mt-2 mb-3"></div>
+			<p>Donec sed odio dui. Etiam porta sem malesuada magna mollis euismod. Nullam id dolor id nibh ultricies vehicula ut id elit. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Praesent commodo cursus magna.</p>
+			<p>Donec sed odio dui. Etiam porta sem malesuada magna mollis euismod. Nullam id dolor id nibh ultricies vehicula ut id elit. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Praesent commodo cursus magna.</p>
+			<div class="border-bottom mt-2 mb-3"></div>
+			<div class="d-flex justify-content-between">
+				<a class=" " href=" " role="button">评论 <span class="badge badge-pill badge-primary">5</span></a>
+				<a class=" " href=" " role="button">私信 <span class="badge badge-pill badge-success">25</span></a>
+				<a class=" " href=" " role="button">浏览 <span class="badge badge-pill badge-info">300</span></a>
+			</div>			
+		</div>
+	</div>
 </div>
+
 <style>
-	
 </style>
 
