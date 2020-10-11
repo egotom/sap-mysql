@@ -47,7 +47,7 @@
 			</button>			
 		</div>
 		<div class:show="{adv}" class="dropmenu bg-light p-4 border shadow-sm rounded">
-			<p class="font-weight-light">缩小搜索范围</p>
+			<p class="font-weight-light text-info">缩小搜索范围</p>
 			<div class="form-group row">
 				<label for="a" class="col-sm-2 col-form-label font-weight-light">精确匹配</label>
 				<div class="col-sm-10">
@@ -67,6 +67,12 @@
 				</div>
 			</div>
 			<div class="form-group row">
+				<label for="c" class="col-sm-2 col-form-label font-weight-light">地域</label>
+				<div class="col-sm-10">
+				<input type="text" class="inp bg-light" >
+				</div>
+			</div>
+			<div class="form-group row">
 				<label for="d" class="col-sm-2 col-form-label font-weight-light">日期</label>
 				<div class="col-sm-10">
 					<select class="form-control">
@@ -81,7 +87,7 @@
 			<div class="form-group row ">
 				<div class="col-12 d-flex justify-content-end">
 				<button type="submit" class="btn bg-light mr-4">重 置</button>
-				<button type="submit" class="btn bg-gradient-secondary ">搜 索</button>
+				<button type="submit" class="btn bg-light ">搜 索</button>
 				</div>
 			</div>
 		</div>
@@ -113,7 +119,7 @@
 				<div class="row ">
 				  <div class="col col-sm-12  justify-content-center">
 					<p class="text-center my-0">egotom</p>
-					<p class="text-center mb-4">egotom@gmail.com</p>
+					<p class="text-center mb-4 text-primary">egotom@gmail.com</p>
 				  </div>
 				</div>
 				<div class="row ">
@@ -130,7 +136,7 @@
 {#if side}
 <div class="container-fluid mt-5 pt-4">
 	<div class="row mt-2 mt-lg-2 mt-sm-5">
-		<Nav {segment}/>
+		<Nav segment={segment} sbd={(mainWidth<768)}/>
 		<div class="col-md-9 ml-sm-auto col-lg-10 px-md-5 px-lg-5 px-sm-2">
 			<slot></slot>
 		</div>

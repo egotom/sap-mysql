@@ -43,26 +43,6 @@
 			</div>				
 		</div>
 
-		<div class="d-flex justify-content-center">
-			<nav aria-label="Page navigation example">
-				<ul class="pagination">
-					<li class="page-item">
-					<a class="page-link" href=" " aria-label="Previous">
-						<span aria-hidden="true">&laquo;</span>
-					</a>
-					</li>
-					<li class="page-item"><a class="page-link" href=" ">1</a></li>
-					<li class="page-item"><a class="page-link" href=" ">2</a></li>
-					<li class="page-item"><a class="page-link" href=" ">3</a></li>
-					<li class="page-item">
-					<a class="page-link" href=" " aria-label="Next">
-						<span aria-hidden="true">&raquo;</span>
-					</a>
-					</li>
-				</ul>
-			</nav>
-		</div>
-
 	</div>
 	<div class="col-lg-4 col-md-4 col-sm-12 pt-md-5 pt-sm-0 px-md-5 px-sm-3 order-md-1 order-sm-0 mb-5">
 		<div class="border rounded-lg shadow-sm p-3 mb-4 mt-md-1 mt-sm-0">
@@ -78,32 +58,10 @@
 			</div>			
 		</div>
 
-		<div class="border rounded-lg shadow-sm p-3 mb-4 mt-md-1 mt-sm-0 bg-light">
-			<span class="d-inline-block border-bottom mb-3 "> <a class:active="{1 === 2}" class="snl text-dark d-inline-block ml-3 pb-2" href=" ">手手动阀</a> </span>
-			<span class="d-inline-block border-bottom mb-3 "> <a class:active="{1 === 2}" class="snl text-dark d-inline-block ml-3 pb-2" href=" ">手动阀</a> </span>
-			<span class="d-inline-block border-bottom mb-3 "> <a class:active="{1 === 2}" class="snl text-dark d-inline-block ml-3 pb-2" href=" ">手动阀</a> </span>
-			<span class="d-inline-block border-bottom mb-3 "> <a class:active="{1 === 1}" class="snl text-dark d-inline-block ml-3 pb-2" href=" ">手动阀手动阀</a> </span>
-			<span class="d-inline-block border-bottom mb-3 "> <a class:active="{1 === 2}" class="snl text-dark d-inline-block ml-3 pb-2" href=" ">手动阀手动阀</a> </span>
-			<span class="d-inline-block border-bottom mb-3 "> <a class:active="{1 === 2}" class="snl text-dark d-inline-block ml-3 pb-2" href=" ">手手动阀</a> </span>
-			<span class="d-inline-block border-bottom mb-3 "> <a class:active="{1 === 2}" class="snl text-dark d-inline-block ml-3 pb-2" href=" ">手动阀</a> </span>
-			<span class="d-inline-block border-bottom mb-3 "> <a class:active="{1 === 2}" class="snl text-dark d-inline-block ml-3 pb-2" href=" ">手动阀</a> </span>
-			<span class="d-inline-block border-bottom mb-3 "> <a class:active="{1 === 2}" class="snl text-dark d-inline-block ml-3 pb-2" href=" ">手动阀手动阀</a> </span>
-			<span class="d-inline-block border-bottom mb-3 "> <a class:active="{1 === 2}" class="snl text-dark d-inline-block ml-3 pb-2" href=" ">手动阀手动阀</a> </span>
-		</div>
 
-		<div class="border rounded-lg shadow-sm p-3 mb-4 mt-md-1 mt-sm-0 bg-light">
-			<div class="d-flex justify-content-center">
-				<div class="col-3 text-center">
-					<h2 class="text-warning">这里应该有广告</h2>
-				</div>	
-			</div>
-		</div>
 	</div>
 </div>
 
 <style>
-	.active{color: #007bff!important; border-bottom:2px solid #007bff;}
-	.snl{font-size: 1.1em; font-weight: 500;}
-	.snl:hover{text-decoration:none;color:#007bff!important;border-bottom:2px solid #007bff;}
 </style>
 
