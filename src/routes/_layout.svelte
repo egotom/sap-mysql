@@ -1,7 +1,7 @@
 <script>
 	import Nav from '../components/Nav.svelte';
-
 	export let segment;
+	//console.log(segment,'---------------------------------------------');
 	let mainWidth=768;
 	let adv=true,hots=true,pfo=true;
 	$: side=(mainWidth<768)? false:true;
@@ -126,8 +126,8 @@
 					<div class="col col-sm-12 d-flex justify-content-center">
 						<button class="btn btn-outline-secondary btn-sm">退出登录</button>
 					</div>
-				  </div>
-			  </div>
+				</div>
+			</div>
 		</div>
 	</div>
 </nav>
@@ -138,7 +138,7 @@
 	<div class="row mt-2 mt-lg-2 mt-sm-5">
 		<Nav segment={segment} sbd={(mainWidth<768)}/>
 		<div class="col-md-9 ml-sm-auto col-lg-10 px-md-5 px-lg-5 px-sm-2">
-			<slot></slot>
+			<slot {segment}></slot>
 		</div>
 	</div>
 </div>
@@ -146,7 +146,7 @@
 <div class="container-fluid mt-5 pt-4 px-md-5 px-lg-5 px-sm-1">
 	<div class="row mt-2 mt-lg-2 mt-sm-5 px-md-5 px-lg-5 px-sm-2">
 		<div class="col-md-12 ml-sm-12 col-lg-12 px-md-5 px-lg-5 px-sm-2">
-			<slot></slot>
+			<slot {segment}></slot>
 		</div>
 	</div>
 </div>

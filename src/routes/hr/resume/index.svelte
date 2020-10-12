@@ -1,6 +1,9 @@
 <script>
-	import Profile from '../components/Profile.svelte';
-	import SubNav from '../components/SubNav.svelte';
+	import Profile from '../../../components/Profile.svelte';
+	import SubNav from '../../../components/SubNav.svelte';
+	import { stores } from "@sapper/app";
+    const {page} = stores();
+	
 </script>
 
 <svelte:head>
@@ -70,6 +73,7 @@
 	</div>
 	<div class="col-lg-4 col-md-4 col-sm-12 pt-md-5 pt-sm-0 px-md-5 px-sm-3 order-md-1 order-sm-0 mb-5">
 		<Profile />
+		<SubNav uri={$page}/>
 		<div class="border rounded-lg shadow-sm p-3 mb-4 mt-md-1 mt-sm-0 bg-light">
 			<div class="d-flex justify-content-center">
 				<div class="col-3 text-center">
