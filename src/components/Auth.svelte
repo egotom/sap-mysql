@@ -1,7 +1,7 @@
 <script>
   import {stores} from '@sapper/app'
   const { session } = stores()
-  let email = null, password = '', cfpassword='', userName='',isRegister=false,agree=false, msg='';
+  let email = null, passwd = '', cfpassword='', userName='',isRegister=false,agree=false,remember=false, msg='';
   async function login(e){
     e.preventDefault();
     await fetch('/auth?login=1', {
@@ -9,7 +9,7 @@
       mode: 'cors',
       credentials: 'include',
       headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({email,password})
+      body: JSON.stringify({email,passwd,remember})
     })
   }
   async function register(){
@@ -30,7 +30,7 @@
       mode: 'cors',
       credentials: 'include',
       headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({userName,email,password})
+      body: JSON.stringify({userName,email,passwd})
     })
     msg='<span style="color:green">注册成功，<br>请前往注册邮箱激活你的账号。</span>';
   }
@@ -42,10 +42,10 @@
     <label for="inputEmail" class="sr-only">邮箱</label>
     <input type="email" id="inputEmail" class="form-control" placeholder="邮箱" required bind:value={email}>
     <label for="inputPassword" class="sr-only">密码</label>
-    <input type="password" id="inputPassword" class="form-control" placeholder="密码" required bind:value={password}>
+    <input type="password" id="inputPassword" class="form-control" placeholder="密码" required bind:value={passwd}>
     <div class="checkbox mb-3">
       <label>
-        <input type="checkbox" value="remember-me"> 下次自动登录
+        <input type="checkbox" bind:checked={remember}> 下次自动登录
       </label>
     </div>
     <button class="btn btn-primary btn-inline-block mb-1" type="submit" >登 录</button>
@@ -58,7 +58,7 @@
     <label for="inputEmail" class="sr-only">邮箱</label>
     <input type="email" id="inputEmail" class="form-control" placeholder="邮箱" required bind:value={email}>
     <label for="inputPassword" class="sr-only">密码</label>
-    <input type="password" id="inputPassword" class="form-control" placeholder="密码" required bind:value={password}>
+    <input type="password" id="inputPassword" class="form-control" placeholder="密码" required bind:value={passwd}>
     <label for="cfPassword" class="sr-only">确认密码</label>
     <input type="password" id="cfPassword" class="form-control" placeholder="确认密码" required bind:value={cfpassword}>
     <div class="checkbox mb-3">

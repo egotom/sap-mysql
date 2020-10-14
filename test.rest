@@ -1,0 +1,28 @@
+
+POST  http://localhost:3000/auth?login=1
+Content-Type: application/json
+
+{
+  "email": "egotom@gmail.com",
+  "passwd":"123654",
+  "remember":true
+}
+###
+
+POST  http://localhost:3000/auth?refresh=1
+Content-Type: application/json
+
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXJ9.eyJuYW1lIjoiZWdvdG9tIiwiZW1haWwiOiJlZ290b21AZ21haWwuY29tIiwiaWF0IjoxNjAyNjY3NzQ4fQ.6bpnFxsULDB6ZjTLY3vO3fkzzNCWWthrtNvvSA84mVo"
+}
+###
+
+POST  http://localhost:3000/auth?register=1
+Content-Type: application/json
+
+{
+  "userName":"egotom",
+  "email": "egotom@gmail.com",
+  "passwd":"123654"
+}
+###
