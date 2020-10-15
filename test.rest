@@ -4,7 +4,7 @@ Content-Type: application/json
 
 {
   "email": "egotom@gmail.com",
-  "passwd":"123654",
+  "passwd":"123123",
   "remember":true
 }
 ###
@@ -24,5 +24,23 @@ Content-Type: application/json
   "userName":"egotom",
   "email": "egotom@gmail.com",
   "passwd":"123654"
+}
+###
+
+
+POST  http://localhost:3000/auth?reset=1
+Content-Type: application/json
+
+{
+  "email": "egotom@gmail.com"
+}
+###
+
+POST  http://localhost:3000/auth?reset=2
+Content-Type: application/json
+
+{
+  "passwd": "123123",
+  "token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImVnb3RvbUBnbWFpbC5jb20iLCJuYW1lIjoiZWdvdG9tIiwiaWF0IjoxNjAyNzMzNzA3LCJleHAiOjE2MDI3MzQwMDd9.JuhYy3zFpmY8H9lARyPQbe5h6ijnr3vZ_nLulwSxMO4"
 }
 ###

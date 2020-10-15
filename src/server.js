@@ -11,7 +11,16 @@ polka() // You can also use Express
 		json(),
 		compression({ threshold: 0 }),
 		sirv('static', { dev }),
-		sapper.middleware()
+		sapper.middleware({
+			session: req => ({
+				accessToken:req.session && req.session.accessToken,
+				name:req.session && req.session.name,
+				email:req.session && req.session.email,
+				avatar:req.session && req.session.avatar,
+				erno:req.session && req.session.erno
+			})
+		})
+		//sapper.middleware()
 	)
 	.listen(PORT, err => {
 		if (err) console.log('error', err);

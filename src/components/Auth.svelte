@@ -1,23 +1,30 @@
 <script>
+  import Error from './Error.svelte';
   import {stores} from '@sapper/app'
   const { session } = stores()
-  let email = null, passwd = '', cfpassword='', userName='',isRegister=false,agree=false,remember=false, msg='';
+  
+
+  let email = null, passwd = '', cfpassword='', userName='', agree=false,remember=false, erno=0;
+  $:mode=0;
   async function login(e){
     e.preventDefault();
-    await fetch('/auth?login=1', {
+    let res =await fetch('/auth?login=1', {
       method: 'POST',
       mode: 'cors',
       credentials: 'include',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({email,passwd,remember})
     })
+    res = await res.json();
+    $session=res
+    erno=res.erno;
   }
   async function register(){
-    if(cfpassword!==password){
+    if(cfpassword!==passwd){
       msg='<span style="color:red">两次输入的密码不一致，<br>请重新输入。</span>';
       return;
     }
-    if(password.length<6){
+    if(passwd.length<6){
       msg='<span style="color:red">密码长度至少为6位。</span>';
       return;
     }
@@ -25,20 +32,47 @@
       msg='<span style="color:red">请阅读并同意用户协议。</span>';
       return;
     }
-    await fetch('/auth?register=1', {
+    
+    let res=await fetch('/auth?register=1', {
       method: 'POST',
       mode: 'cors',
       credentials: 'include',
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({userName,email,passwd})
     })
-    msg='<span style="color:green">注册成功，<br>请前往注册邮箱激活你的账号。</span>';
+    res = await res.json();
+    erno=res.erno;
+  }
+  async function reset(){
+    let res=await fetch('/auth?reset=1', {
+      method: 'POST',
+      mode: 'cors',
+      credentials: 'include',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({email})
+    })
+    res = await res.json();
+    erno=res.erno;
   }
 
+  async function reset2(){
+    let res=await fetch('/auth?reset=2', {
+      method: 'POST',
+      mode: 'cors',
+      credentials: 'include', 
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({passwd})
+    })
+    res = await res.json();
+    erno=res.erno;
+  }
+  function setMode(md){
+    mode=md
+  }
 </script>
-{#if !isRegister}
+{#if mode===0}
   <form class="form-signin"  on:submit|preventDefault="{login}">
-    <p class="font-weight-light text-info mb-3">登录，或 <a href=" " class="font-weight-bold" on:click="{()=>{isRegister=!isRegister}}">注册新账号</a></p>
+    <p class="font-weight-light text-info mb-3">登录，或 <a href=" " class="font-weight-bold" on:click="{()=>setMode(1)}">注册新账号</a></p>
     <label for="inputEmail" class="sr-only">邮箱</label>
     <input type="email" id="inputEmail" class="form-control" placeholder="邮箱" required bind:value={email}>
     <label for="inputPassword" class="sr-only">密码</label>
@@ -48,11 +82,12 @@
         <input type="checkbox" bind:checked={remember}> 下次自动登录
       </label>
     </div>
+    <Error erno={erno} setMode={setMode} />
     <button class="btn btn-primary btn-inline-block mb-1" type="submit" >登 录</button>
   </form>  
-{:else}
+  {:else if mode===1}
   <form class="form-signin" on:submit|preventDefault="{register}">
-    <p class="font-weight-light text-info mb-3">注册新账号，或 <a href=" " class="font-weight-bold" on:click="{()=>{isRegister=!isRegister}}">登录账号</a></p>
+    <p class="font-weight-light text-info mb-3">注册新账号，或 <a href=" " class="font-weight-bold" on:click="{()=>setMode(0)}">登录账号</a></p>
     <label for="userName" class="sr-only">用户名</label>
     <input type="text" id="userName" class="form-control" placeholder="用户名" required bind:value={userName}>
     <label for="inputEmail" class="sr-only">邮箱</label>
@@ -61,15 +96,32 @@
     <input type="password" id="inputPassword" class="form-control" placeholder="密码" required bind:value={passwd}>
     <label for="cfPassword" class="sr-only">确认密码</label>
     <input type="password" id="cfPassword" class="form-control" placeholder="确认密码" required bind:value={cfpassword}>
-    <div class="checkbox mb-3">
+    <div class="checkbox mb-1">
       <label>
         <input type="checkbox" bind:checked={agree}> 我同意 <a href="/terms">用户协议</a>。
       </label>
     </div>
-    <p class="text-center">{@html msg}</p>
+    <Error erno={erno} setMode={setMode} />
     <button class="btn btn-primary btn-inline-block mb-1" type="submit">注 册</button>
   </form>
+  {:else if mode===2}
+    <form class="form-signin" on:submit|preventDefault="{reset}">
+      <label for="inputEmail" class="sr-only">注册邮箱</label>
+      <input type="email" id="inputEmail" class="form-control" placeholder="注册邮箱" required bind:value={email}>
+      <Error erno={erno} setMode={setMode} />
+      <button class="btn btn-primary btn-inline-block mb-1" type="submit">重置密码</button>
+    </form>
+  {:else}
+    <form class="form-signin" on:submit|preventDefault="{reset2}">
+      <label for="inputPassword" class="sr-only">新密码</label>
+      <input type="password" id="inputPassword" class="form-control" placeholder="新密码" required bind:value={passwd}>
+      <label for="cfPassword" class="sr-only">确认新密码</label>
+      <input type="password" id="cfPassword" class="form-control" placeholder="确认新密码" required bind:value={cfpassword}>
+      <Error erno={erno} setMode={setMode} />
+      <button class="btn btn-primary btn-inline-block mb-1" type="submit">重置密码</button>
+    </form>
 {/if}
+
 <style>
   .form-signin {
     width: 100%;
