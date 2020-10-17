@@ -1,25 +1,29 @@
-import sirv from 'sirv';
-import polka from 'polka';
-import compression from 'compression';
-import * as sapper from '@sapper/server';
+import sirv from 'sirv'
+import express from "express"
+import compression from 'compression'
+import * as sapper from '@sapper/server'
+import cookieParser from 'cookie-parser'
+import {auth} from './routes/auth'
+
 const { json } = require('body-parser');
 const { PORT, NODE_ENV } = process.env;
 const dev = NODE_ENV === 'development';
 
-polka() // You can also use Express
-	.use(
+var app = express();
+app.use(
 		json(),
 		compression({ threshold: 0 }),
 		sirv('static', { dev }),
-		sapper.middleware({
-			session: req => ({
-				accessToken:req.session && req.session.accessToken,
-				name:req.session && req.session.name,
-				email:req.session && req.session.email,
-				avatar:req.session && req.session.avatar,
-				erno:req.session && req.session.erno
-			})
-		})
+		cookieParser(),
+		async (req, res, next) => {
+			const token = req.cookies['auth']
+			if(token){			
+				let profile=auth(token)
+				return sapper.middleware({session: () => ({authenticated: !!profile,profile:profile})})(req, res, next)
+			}else
+				return sapper.middleware({session: () => ({authenticated: false})})(req, res, next)
+		}
+		//sapper.middleware({session: req => ({})})
 		//sapper.middleware()
 	)
 	.listen(PORT, err => {

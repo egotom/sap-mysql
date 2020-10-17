@@ -1,5 +1,6 @@
 <script>
-  import Error from './Error.svelte';
+  import Error from './Error.svelte'
+  import {getCookies } from '../cookie'
   import {stores} from '@sapper/app'
   const { session } = stores()
   
@@ -15,9 +16,15 @@
       headers: {'Content-Type': 'application/json'},
       body: JSON.stringify({email,passwd,remember})
     })
-    res = await res.json();
-    $session=res
-    erno=res.erno;
+    res = await res.json()
+    let cks = getCookies()
+    $session.authenticated=cks.get('auth')?true:false
+    //sessionStorage.setItem('token', res.accessToken);
+    //sessionStorage.setItem('name', res.name);
+    //sessionStorage.setItem('email', res.email);
+    //sessionStorage.setItem('avatar', res.avatar);
+    //console.log(cks.get('auth'),'-------------------')
+    erno=res.erno
   }
   async function register(){
     if(cfpassword!==passwd){

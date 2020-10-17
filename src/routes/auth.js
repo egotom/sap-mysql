@@ -1,10 +1,11 @@
-import db from '../mysql.js';
-const jwt = require('jsonwebtoken');
-const send = require('@polka/send-type');
-const bcrypt = require('bcrypt');
+import db from '../mysql.js'
+const jwt = require('jsonwebtoken')
+const send = require('@polka/send-type')
+const bcrypt = require('bcrypt')
+import * as sapper from '@sapper/server'
 
-const ACCESS_TOKEN_SECRET='7404C0014fdec4396807ab9e100fe307b9d8feE645f22703ee81d1a54af0b63938bd91587f1813';
-const REFRESH_TOKEN_SECRET='01e96440e8b307c40228aa57a5edf3b7fb6a039D00b958aeb042ea2d757360a15cc273639587c1';
+export const ACCESS_TOKEN_SECRET='7404C0014fdec4396807ab9e100fe307b9d8feE645f22703ee81d1a54af0b63938bd91587f1813'
+export const REFRESH_TOKEN_SECRET='01e96440e8b307c40228aa57a5edf3b7fb6a039D00b958aeb042ea2d757360a15cc273639587c1'
 
 /**
  * You first need to create a formatting function to pad numbers to two digits…
@@ -39,21 +40,26 @@ export async function  post(req, res){
 			const {name,email,passwd,avatar,active} = results[0]			
 			if(!active) return send(res, 401, {erno:2})
 			if(await bcrypt.compare(password, passwd)) {
-				const accessToken = generateAccessToken({name, email})
+				const accessToken = generateAccessToken({name, email,avatar})
 				if(remember){
-					const refreshToken = jwt.sign({name, email}, REFRESH_TOKEN_SECRET)
+					const refreshToken = jwt.sign({name, email,avatar}, REFRESH_TOKEN_SECRET)
 					db.query(`update user set refresh_token=?,login_at=? where email = ? `,[refreshToken,now(new Date()),email],(err,results)=>{
 						if(err) console.log(JSON.stringify(err),JSON.stringify(results))
 					})
-					json(res, { accessToken: accessToken, refreshToken: refreshToken , avatar:avatar})
+					res.cookie('refresh',refreshToken, {
+						expires: new Date(Date.now() + 7 * 86400000) // cookie will be removed after 7 days
+					}).cookie('auth',accessToken).cookie('name',name).cookie('email',email).cookie('avatar',avatar)
+					json(res, { accessToken: accessToken, name:name, email:email, avatar:avatar,erno:0})
 				}else{
 					db.query(`update user set refresh_token=?,login_at=? where email = ? `,['',now(new Date()),email],(err,results)=>{
 						if(err) console.log(JSON.stringify(err),JSON.stringify(results))
-					})
+					})	
+					//res.cookie('auth',JSON.stringify({accessToken:'Bearer ' +accessToken, name:name,email:email,avatar:avatar }))
+					res.cookie('auth',accessToken).cookie('name',name).cookie('email',email).cookie('avatar',avatar)
 					json(res, { accessToken: accessToken, name:name, email:email, avatar:avatar,erno:0})
 				}
 				
-			}else 
+			}else
 				return send(res, 404, {erno:3})
 		
 		});
@@ -79,7 +85,8 @@ export async function  post(req, res){
 		});	
 	}
 	if(req.query.refresh){
-		const rfToken = req.body.token
+		const rfToken = req.query.refresh
+		Console.log(rfToken)
 		if (rfToken == null) return send(res, 403, JSON.stringify({erno:100}))
 		jwt.verify(rfToken, REFRESH_TOKEN_SECRET, (err, user) => {
 			if (err) 
@@ -92,7 +99,7 @@ export async function  post(req, res){
 							return send(res, 403, JSON.stringify({erno:100}))
 						else{
 							const {name ,email,avatar}=results[0]
-							const accessToken = generateAccessToken({ email: email, name:name})
+							const accessToken = generateAccessToken({ email: email, name:name,avatar:avatar})
 							json(res,{accessToken: accessToken,avatar:avatar})
 						}
 					}
@@ -145,4 +152,15 @@ export function json(res,son){
 
 export function generateAccessToken(user) {
 	return jwt.sign(user, ACCESS_TOKEN_SECRET, { expiresIn: '15s' })
+}
+
+export const auth= (token) => {
+	let result
+	try {
+		result=jwt.verify(token, ACCESS_TOKEN_SECRET) // FIXME: Get secret key from configuration
+	} catch (err) {
+		return null
+	}
+	if(result)
+		return {name:result.name,email:result.email,avatar:result.avatar}
 }

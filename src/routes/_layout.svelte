@@ -1,7 +1,8 @@
 <script>
 	import Nav from '../components/Nav.svelte';
 	import {stores} from '@sapper/app';
-    const { session } = stores();
+	const { session } = stores();
+	console.log($session,'##########')
 	export let segment;
 	let mainWidth=768;
 	let adv=true,hots=true,pfo=true;
@@ -100,15 +101,15 @@
 	</div>
 	</div>
 	<div class="col-md-3 col-lg-3 order-md-2 order-sm-1 col-sm-8 d-flex justify-content-end">
-		{#if $session.accessToken}
+		{#if $session.authenticated}
 		<a href=" " class="avatar rounded-circle" on:click={onPfo}>
-			<img alt=" " src="{$session.avatar}">
+			<img alt=" " src="{$session.profile.avatar}">
 		</a>
 		<div class:show="{pfo}" class="dropmenu border shadow-sm rounded bg-white p-5">
 			<div class="container">
 				<div class="row">
 				  <div class="col col-sm-12 d-flex justify-content-center">
-					<img src="{$session.avatar}" alt="" class="avatar-lg mb-2">
+					<img src="{$session.profile.avatar}" alt="" class="avatar-lg mb-2">
 					<a class="btn-upload bg-white px-1 pb-1 text-secondary " href=" ">	
 						<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-camera" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
 							<path fill-rule="evenodd" d="M15 12V6a1 1 0 0 0-1-1h-1.172a3 3 0 0 1-2.12-.879l-.83-.828A1 1 0 0 0 9.173 3H6.828a1 1 0 0 0-.707.293l-.828.828A3 3 0 0 1 3.172 5H2a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1zM2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.172a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 9.172 2H6.828a2 2 0 0 0-1.414.586l-.828.828A2 2 0 0 1 3.172 4H2z"/>
@@ -120,8 +121,8 @@
 				</div>
 				<div class="row ">
 				  <div class="col col-sm-12  justify-content-center">
-					<p class="text-center my-0">{$session.name}</p>
-					<p class="text-center mb-4 text-primary">{$session.email}</p>
+					<p class="text-center my-0">{$session.profile.name}</p>
+					<p class="text-center mb-4 text-primary">{$session.profile.email}</p>
 				  </div>
 				</div>
 				<div class="row ">
