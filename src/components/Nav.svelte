@@ -3,7 +3,7 @@
 </script>
 <nav class="col-md-3 col-lg-2 col-sm-6 d-md-block bg-white sidebar pt-5 pl-0" class:dbr1={sbd}>
 	<div class="sidebar-sticky pt-md-3 pt-sm-5">
-		<ul class="position-absolute nav flex-column pt-4">
+		<ul class="position-absolute nav flex-column pt-md-4">
 			<li><a class:active="{segment === undefined}" class="nav-link active pl-4 py-3"  href=".">热门</a></li>
 			<li><a class:active="{segment === 'hr'}" class="nav-link pl-4 py-3" href="hr">人力资源</a></li>
 			<li><a class:active="{segment === 'rental'}" class="nav-link pl-4 py-3" href="rental">出租-招租</a></li>

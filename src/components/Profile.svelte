@@ -1,16 +1,8 @@
 <script>
     import Auth from "./Auth.svelte"
     import {stores} from '@sapper/app'    
-    import {getCookies} from '../cookie'
     const { session } = stores()
-    //console.log($session,'----------------------------------')
-    //if(typeof window !== 'undefined'){
-    //    let cks=getCookies()
-    //    $session=cks.get("auth")
-    //}
-        
 </script>
-
     <div class="text-center">
         <a href=" " class="btn btn-primary d-inline-block my-3"  >发布供求信息</a>
         {#if $session.authenticated}
@@ -28,8 +20,8 @@
         <a class=" " href=" " role="button">评论 <span class="badge badge-pill badge-primary">5</span></a>
         <a class=" " href=" " role="button">私信 <span class="badge badge-pill badge-success">25</span></a>
         <a class=" " href=" " role="button">浏览 <span class="badge badge-pill badge-info">300</span></a>
-    </div>	
-    {/if}		
+    </div>
+    {/if}
 <style>
 .quote{text-indent:2em;line-height: 1.8em;} 
 </style>

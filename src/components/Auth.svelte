@@ -1,10 +1,6 @@
 <script>
   import Error from './Error.svelte'
-  import {getCookies } from '../cookie'
-  import {stores} from '@sapper/app'
-  const { session } = stores()
   
-
   let email = null, passwd = '', cfpassword='', userName='', agree=false,remember=false, erno=0;
   $:mode=0;
   async function login(e){
@@ -17,14 +13,9 @@
       body: JSON.stringify({email,passwd,remember})
     })
     res = await res.json()
-    let cks = getCookies()
-    $session.authenticated=cks.get('auth')?true:false
-    //sessionStorage.setItem('token', res.accessToken);
-    //sessionStorage.setItem('name', res.name);
-    //sessionStorage.setItem('email', res.email);
-    //sessionStorage.setItem('avatar', res.avatar);
-    //console.log(cks.get('auth'),'-------------------')
+    //{ credentials: "include" }
     erno=res.erno
+    if(res.erno==0) location.reload()
   }
   async function register(){
     if(cfpassword!==passwd){
@@ -71,13 +62,28 @@
       body: JSON.stringify({passwd})
     })
     res = await res.json();
-    erno=res.erno;
+    erno=res.erno
+    
   }
-  function setMode(md){
+
+  const active=()=>{
+    fetch('/auth?active=1', {method: 'POST',mode: 'cors',
+      headers: {'Content-Type': 'application/json'},body: JSON.stringify({email})})
+    .then(response => response.json())
+    .then(data => {
+      console.log(data)
+      erno=data.erno
+      mode=0
+    })    
+  }
+
+  const setMode=(md)=>{
     mode=md
+    erno=0
   }
 </script>
-{#if mode===0}
+<!--登录-->
+{#if mode===0} 
   <form class="form-signin"  on:submit|preventDefault="{login}">
     <p class="font-weight-light text-info mb-3">登录，或 <a href=" " class="font-weight-bold" on:click="{()=>setMode(1)}">注册新账号</a></p>
     <label for="inputEmail" class="sr-only">邮箱</label>
@@ -92,7 +98,8 @@
     <Error erno={erno} setMode={setMode} />
     <button class="btn btn-primary btn-inline-block mb-1" type="submit" >登 录</button>
   </form>  
-  {:else if mode===1}
+<!--注册-->
+{:else if mode===1}
   <form class="form-signin" on:submit|preventDefault="{register}">
     <p class="font-weight-light text-info mb-3">注册新账号，或 <a href=" " class="font-weight-bold" on:click="{()=>setMode(0)}">登录账号</a></p>
     <label for="userName" class="sr-only">用户名</label>
@@ -111,14 +118,23 @@
     <Error erno={erno} setMode={setMode} />
     <button class="btn btn-primary btn-inline-block mb-1" type="submit">注 册</button>
   </form>
-  {:else if mode===2}
+<!--修改密码-->
+{:else if mode===2}
     <form class="form-signin" on:submit|preventDefault="{reset}">
       <label for="inputEmail" class="sr-only">注册邮箱</label>
       <input type="email" id="inputEmail" class="form-control" placeholder="注册邮箱" required bind:value={email}>
       <Error erno={erno} setMode={setMode} />
       <button class="btn btn-primary btn-inline-block mb-1" type="submit">重置密码</button>
     </form>
-  {:else}
+<!--激活账号-->
+{:else if mode===3}
+    <form class="form-signin" on:submit|preventDefault="{active}">
+      <label for="inputEmail" class="sr-only">注册邮箱</label>
+      <input type="email" id="inputEmail" class="form-control" placeholder="注册邮箱" required bind:value={email}>
+      <Error erno={erno} setMode={setMode} />
+      <button class="btn btn-primary btn-inline-block mb-1" type="submit">发送激活邮件</button>
+    </form>
+{:else}
     <form class="form-signin" on:submit|preventDefault="{reset2}">
       <label for="inputPassword" class="sr-only">新密码</label>
       <input type="password" id="inputPassword" class="form-control" placeholder="新密码" required bind:value={passwd}>
@@ -126,6 +142,7 @@
       <input type="password" id="cfPassword" class="form-control" placeholder="确认新密码" required bind:value={cfpassword}>
       <Error erno={erno} setMode={setMode} />
       <button class="btn btn-primary btn-inline-block mb-1" type="submit">重置密码</button>
+      
     </form>
 {/if}
 

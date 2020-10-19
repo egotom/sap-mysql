@@ -1,8 +1,8 @@
 <script>
-	import Nav from '../components/Nav.svelte';
-	import {stores} from '@sapper/app';
-	const { session } = stores();
-	console.log($session,'##########')
+	import Nav from '../components/Nav.svelte'
+	import {stores} from '@sapper/app'
+	const { session } = stores()
+	//console.log($session,'##########')
 	export let segment;
 	let mainWidth=768;
 	let adv=true,hots=true,pfo=true;
@@ -12,6 +12,16 @@
 	const onPfo=()=>{pfo=!pfo;adv=true;hots=true};
 	const onAdv=()=>{adv=!adv;pfo=true;hots=true};
 	const onSide=()=>{side=!side;};
+	const logout=()=>{
+		let cookies = document.cookie.split(";");
+		for (var i = 0; i < cookies.length; i++) {
+			var cookie = cookies[i];
+			var eqPos = cookie.indexOf("=");
+			var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+			document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+		}
+		$session.authenticated=false
+	}
 </script>
 <svelte:window bind:innerWidth={mainWidth}/>
 <div class="container-fluid mb-5 fixed-top bg-white justify-content-md-between justify-content-sm-between" >
@@ -127,7 +137,7 @@
 				</div>
 				<div class="row ">
 					<div class="col col-sm-12 d-flex justify-content-center">
-						<button class="btn btn-outline-secondary btn-sm">退出登录</button>
+						<button class="btn btn-outline-secondary btn-sm" on:click="{logout}">退出登录</button>
 					</div>
 				</div>
 			</div>

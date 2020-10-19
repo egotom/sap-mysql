@@ -3,7 +3,7 @@ import express from "express"
 import compression from 'compression'
 import * as sapper from '@sapper/server'
 import cookieParser from 'cookie-parser'
-import {auth} from './routes/auth'
+import {auth,refreshToken} from './routes/auth'
 
 const { json } = require('body-parser');
 const { PORT, NODE_ENV } = process.env;
@@ -15,13 +15,24 @@ app.use(
 		compression({ threshold: 0 }),
 		sirv('static', { dev }),
 		cookieParser(),
-		async (req, res, next) => {
+		(req, res, next) => {
 			const token = req.cookies['auth']
-			if(token){			
+			const refresh = req.cookies['refresh']
+			let ctn=false
+			if(token){					
 				let profile=auth(token)
-				return sapper.middleware({session: () => ({authenticated: !!profile,profile:profile})})(req, res, next)
-			}else
-				return sapper.middleware({session: () => ({authenticated: false})})(req, res, next)
+				if(!!profile){	
+					return sapper.middleware({session: () => ({authenticated: true,profile:profile})})(req, res, next)
+				}
+				ctn=true
+			}
+			if(refresh && ctn){
+				let {auth,name,email,avatar}= refreshToken(refresh)
+				res.cookie('auth',auth,{secure:false }).cookie('name',name,{secure:false })
+					.cookie('email',email,{secure:false }).cookie('avatar',avatar,{secure:false })
+				return sapper.middleware({session: () => ({authenticated: !!name,profile:{name,email,avatar}})})(req, res, next)
+			}
+			return sapper.middleware({session: () => ({authenticated: false})})(req, res, next)
 		}
 		//sapper.middleware({session: req => ({})})
 		//sapper.middleware()

@@ -1,9 +1,14 @@
 import db from '../mysql.js'
 const jwt = require('jsonwebtoken')
-const send = require('@polka/send-type')
 const bcrypt = require('bcrypt')
-import * as sapper from '@sapper/server'
+const nodemailer = require("nodemailer")
 
+const transporter = nodemailer.createTransport({
+	server:'',
+	port: 587,
+    secure: false,
+	auth:{user:'',pass:''}
+});
 export const ACCESS_TOKEN_SECRET='7404C0014fdec4396807ab9e100fe307b9d8feE645f22703ee81d1a54af0b63938bd91587f1813'
 export const REFRESH_TOKEN_SECRET='01e96440e8b307c40228aa57a5edf3b7fb6a039D00b958aeb042ea2d757360a15cc273639587c1'
 
@@ -33,12 +38,12 @@ export async function  post(req, res){
 		const remember = req.body.remember
 		db.query(`select name,email,passwd,avatar,active from user where email = ? `,[email], async(err,results)=>{
 			if(err){
-				return send(res, 500, {erno:100})
+				return res.status(500).send({erno:100})
 			}
 			if(results.length===0)
 				return send(res, 404, {erno:1})
 			const {name,email,passwd,avatar,active} = results[0]			
-			if(!active) return send(res, 401, {erno:2})
+			if(!active) return res.status(401).send({erno:2})
 			if(await bcrypt.compare(password, passwd)) {
 				const accessToken = generateAccessToken({name, email,avatar})
 				if(remember){
@@ -47,20 +52,22 @@ export async function  post(req, res){
 						if(err) console.log(JSON.stringify(err),JSON.stringify(results))
 					})
 					res.cookie('refresh',refreshToken, {
-						expires: new Date(Date.now() + 7 * 86400000) // cookie will be removed after 7 days
-					}).cookie('auth',accessToken).cookie('name',name).cookie('email',email).cookie('avatar',avatar)
+						expires: new Date(Date.now() + 7 * 86400000) ,secure:false // cookie will be removed after 7 days
+					}).cookie('auth',accessToken,{secure:false }).cookie('name',name,{secure:false })
+					.cookie('email',email,{secure:false }).cookie('avatar',avatar,{secure:false })
 					json(res, { accessToken: accessToken, name:name, email:email, avatar:avatar,erno:0})
 				}else{
 					db.query(`update user set refresh_token=?,login_at=? where email = ? `,['',now(new Date()),email],(err,results)=>{
 						if(err) console.log(JSON.stringify(err),JSON.stringify(results))
 					})	
 					//res.cookie('auth',JSON.stringify({accessToken:'Bearer ' +accessToken, name:name,email:email,avatar:avatar }))
-					res.cookie('auth',accessToken).cookie('name',name).cookie('email',email).cookie('avatar',avatar)
+					res.cookie('auth',accessToken,{secure:false }).cookie('name',name,{secure:false })
+						.cookie('email',email,{secure:false }).cookie('avatar',avatar,{secure:false })
 					json(res, { accessToken: accessToken, name:name, email:email, avatar:avatar,erno:0})
 				}
 				
 			}else
-				return send(res, 404, {erno:3})
+				return res.status(404).send({erno:3})
 		
 		});
 	}
@@ -71,42 +78,70 @@ export async function  post(req, res){
 		const passwd = await bcrypt.hash(req.body.passwd, salt)
 		
 		if(!reg.test(email)) 
-			return send(res, 403, JSON.stringify({erno:4}))
+			return res.status(403).send({erno:3})
 
 		db.query(`insert into user(name,email,passwd) value(?,?,?)`, [name, email, passwd], async (err) => {
 			if (err) {
 				console.log(JSON.stringify(err))
 				if (err.errno === 1062)
-					return send(res, 401, { erno: 5})
+					return res.status(401).send({erno:5})
 				else
-					return send(res, 500, { erno: 100})
+					return res.status(500).send({erno:100})
 			}
-			return send(res, 200, { erno: 6 })
+			return  res.status(200).send({erno:6})
 		});	
 	}
-	if(req.query.refresh){
-		const rfToken = req.query.refresh
-		Console.log(rfToken)
-		if (rfToken == null) return send(res, 403, JSON.stringify({erno:100}))
-		jwt.verify(rfToken, REFRESH_TOKEN_SECRET, (err, user) => {
-			if (err) 
-				return send(res, 403, JSON.stringify({erno:100}))
+	if(req.query.active){
+		let email = req.query.email
+		Console.log(email)
+		if (email == null) return send(res, 403, JSON.stringify({erno:100}))
+		db.query(`select name,email,avatar from user where email = ? and active=1`, [email], (er,results)=>{
+			if (er) console.log(JSON.stringify(er))
 			else{
-				db.query(`select name,email,avatar from user where refresh_token = ? and login_at>= DATE_SUB(CURDATE(), INTERVAL 6 DAY)`,[rfToken], async(er,results)=>{
-					if (er) console.log(JSON.stringify(er))
-					else{
-						if(results.length==0)
-							return send(res, 403, JSON.stringify({erno:100}))
-						else{
-							const {name ,email,avatar}=results[0]
-							const accessToken = generateAccessToken({ email: email, name:name,avatar:avatar})
-							json(res,{accessToken: accessToken,avatar:avatar})
-						}
+				if(results.length==0)
+					return send(res, 403, JSON.stringify({erno:100}))
+				else{
+					let {name ,email,avatar}=results[0]
+					let refresh = jwt.sign({name, email,avatar}, REFRESH_TOKEN_SECRET, { expiresIn: '5m' })
+					let uri='http://sibelly.org/auth?reset='+refresh
+					let opt={
+						from:'info@sibelly.org', to:email, 
+						subject:'激活你的贝拉网账号，请在收到5分钟内完成操作',
+						text:'亲爱的 '+email+'! <br>请点击下面链接激活你的账号<br> '+
+						'<a href="'+ uri +'">激活账号</a> 或复制下面链接到浏览器完成激活操作<br>'+uri
 					}
-				})
+					transporter.sendMail(opt, function(error,info){
+						if(error){
+							console.log(error);
+							return res.status(403).send({erno:100})
+						}else{
+							console.log('email sent:'+info.response)
+							return res.status(200).send({erno:11})
+						}
+					});
+				}
 			}
 		})
 	}
+
+	if(req.query.refresh){
+		let refresh = req.query.refresh
+		Console.log(refresh)
+		if (refresh == null) return send(res, 403, JSON.stringify({erno:100}))
+		jwt.verify(refresh, REFRESH_TOKEN_SECRET,(err, result)=>{
+			if(err)	{
+				console.log(err)
+				return  res.status(200).send({erno:12})
+			}
+			db.query(`update user set active=1 where email = ?`, [email], (erro)=>{
+				if(erro)
+					return res.status(200).send({erno:100})
+				else
+					return res.status(200).send({erno:13})
+			})
+		})
+	}
+
 	if(req.query.reset){
 		console.log(req.query.reset)
 		if(req.query.reset=="1"){
@@ -118,25 +153,25 @@ export async function  post(req, res){
 				if (er) console.log(JSON.stringify(er))
 				else{
 					if(results.length==0)
-						return send(res, 403, JSON.stringify({erno:7}))
+						return res.status(403).send({erno:7})
 					else{
-						return send(res, 403, JSON.stringify({erno:8}))
+						return res.status(403).send({erno:8})
 					}
 				}
 			})
 		}else{
 			const passwd = req.body.passwd
 			const token = req.body.token
-			if (passwd == null || token==null) return send(res, 403, JSON.stringify({erno:100}))
+			if (passwd == null || token==null) return  res.status(500).send({erno:100})
 			jwt.verify(token, ACCESS_TOKEN_SECRET, async(err, user) => {
 				if (err) 
-					return send(res, 403, JSON.stringify({erno:9}))
+					return  res.status(403).send({erno:9})
 				else{
 					const salt=await bcrypt.genSalt()
 					const hspasswd = await bcrypt.hash(passwd, salt)
 					db.query(`update user set passwd=? where email = ?`,[hspasswd, user.email], async(er,results)=>{
-						if (er) send(res, 403, JSON.stringify({erno:100}))
-						else return send(res, 200, JSON.stringify({erno:10}))
+						if (er) res.status(500).send({erno:100})
+						else return res.status(200).send({erno:10})
 					})
 				}
 				
@@ -151,7 +186,7 @@ export function json(res,son){
 }
 
 export function generateAccessToken(user) {
-	return jwt.sign(user, ACCESS_TOKEN_SECRET, { expiresIn: '15s' })
+	return jwt.sign(user, ACCESS_TOKEN_SECRET, { expiresIn: '15m' })
 }
 
 export const auth= (token) => {
@@ -163,4 +198,14 @@ export const auth= (token) => {
 	}
 	if(result)
 		return {name:result.name,email:result.email,avatar:result.avatar}
+}
+
+export const refreshToken= (refresh)=>{
+	try{
+		const {name, email,avatar}= jwt.verify(refresh, REFRESH_TOKEN_SECRET)
+		const accessToken = generateAccessToken({name, email,avatar})
+		return {name:name,email:email,avatar:avatar,auth:accessToken}
+	}catch(err){
+		return null		
+	}
 }
