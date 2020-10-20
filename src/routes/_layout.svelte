@@ -1,24 +1,35 @@
 <script>
-	import Nav from '../components/Nav.svelte'
 	import {stores} from '@sapper/app'
-	const { session } = stores()
-	//console.log($session,'##########')
-	export let segment;
-	let mainWidth=768;
-	let adv=true,hots=true,pfo=true;
-	$: side=(mainWidth<768)? false:true;
-	const onFocus =()=>{hots=false;adv=true;pfo=true; console.log(hots,'----------');};
+	import { onMount } from 'svelte'
+	import Nav from '../components/Nav.svelte'
+	import Profile from '../components/Profile.svelte'
+	import SubNav from '../components/SubNav.svelte'
+
+	const { page, session } = stores()
+	export let segment
+	let adv=true, hots=true, pfo=true, mainWidth=768, navs=[],subNavs=[]
+	$: side=(mainWidth<768)? false:true
+
+	onMount(() => {
+		fetch(`index.json`).then(r => r.json()).then(data => {
+			navs=data.navs
+			subNavs=data.subNavs
+			console.log(JSON.stringify(subNavs),'##########')
+		})
+	})
+
+	const onFocus =()=>{hots=false;adv=true;pfo=true;}
 	const onBlur =()=>{hots=true};
-	const onPfo=()=>{pfo=!pfo;adv=true;hots=true};
-	const onAdv=()=>{adv=!adv;pfo=true;hots=true};
-	const onSide=()=>{side=!side;};
+	const onPfo=()=>{pfo=!pfo;adv=true;hots=true}
+	const onAdv=()=>{adv=!adv;pfo=true;hots=true}
+	const onSide=()=>{side=!side;}
 	const logout=()=>{
-		let cookies = document.cookie.split(";");
+		let cookies = document.cookie.split(";")
 		for (var i = 0; i < cookies.length; i++) {
-			var cookie = cookies[i];
-			var eqPos = cookie.indexOf("=");
+			var cookie = cookies[i]
+			var eqPos = cookie.indexOf("=")
 			var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-			document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+			document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT"
 		}
 		$session.authenticated=false
 	}
@@ -150,9 +161,30 @@
 {#if side}
 <div class="container-fluid mt-5 pt-4">
 	<div class="row mt-2 mt-lg-2 mt-sm-5">
-		<Nav segment={segment} sbd={(mainWidth<768)}/>
-		<div class="col-md-9 ml-sm-auto col-lg-10 px-md-5 px-lg-5 px-sm-2">
-			<slot {segment}></slot>
+		<nav class="col-md-3 col-lg-2 col-sm-6 d-md-block bg-white sidebar pt-5 pl-0" class:dbr1={(mainWidth<768)}>
+			<Nav segment={segment} navs={navs} />
+		</nav>
+		<div class="col-md-9 col-lg-10 ml-sm-auto  px-md-5 px-lg-5 px-sm-2">
+			<div class="col-md-12 ml-sm-12 col-lg-12 px-md-5 px-lg-5 px-sm-2">
+				<div class="row pt-3">
+					<div class="col-lg-8 col-md-8 col-sm-12 px-md-2 px-sm-3 order-md-0 order-sm-1">
+						<slot {segment}></slot>
+					</div>
+					<div class="col-lg-4 col-md-4 col-sm-12 pt-md-5 pt-sm-0 px-md-5 px-sm-3 order-md-1 order-sm-0 mb-5">
+						<div class="border rounded-lg shadow-sm p-3 mb-4 mt-md-1 mt-sm-0">
+							<Profile />
+						</div>
+						<div><SubNav uri={$page} navs={navs} subNavs={subNavs} /></div>		
+						<div class="border rounded-lg shadow-sm p-3 mb-4 mt-md-1 mt-sm-0 bg-light">
+							<div class="d-flex justify-content-center">
+								<div class="col-3 text-center">
+									<h2 class="text-warning">这里应该有广告</h2>
+								</div>	
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
@@ -160,8 +192,26 @@
 <div class="container-fluid mt-5 pt-4 px-md-5 px-lg-5 px-sm-1">
 	<div class="row mt-2 mt-lg-2 mt-sm-5 px-md-5 px-lg-5 px-sm-2">
 		<div class="col-md-12 ml-sm-12 col-lg-12 px-md-5 px-lg-5 px-sm-2">
-			<slot {segment}></slot>
-		</div>
+			<div class="row pt-3">
+				<div class="col-lg-8 col-md-8 col-sm-12 px-md-2 px-sm-3 order-md-0 order-sm-1">
+					<slot {segment}></slot>
+				</div>
+				<div class="col-lg-4 col-md-4 col-sm-12 pt-md-5 pt-sm-0 px-md-5 px-sm-3 order-md-1 order-sm-0 mb-5">
+					<div class="border rounded-lg shadow-sm p-3 mb-4 mt-md-1 mt-sm-0">
+						<Profile />
+					</div>
+					<div><SubNav uri={$page} navs={navs} subNavs={subNavs} /></div>		
+			
+					<div class="border rounded-lg shadow-sm p-3 mb-4 mt-md-1 mt-sm-0 bg-light">
+						<div class="d-flex justify-content-center">
+							<div class="col-3 text-center">
+								<h2 class="text-warning">这里应该有广告</h2>
+							</div>	
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>		
 	</div>
 </div>
 {/if}
@@ -203,4 +253,16 @@
 	}
 	.side-btn {padding:6px;}
 	.side-btn:hover{background-color: rgb(184, 178, 178); border-radius:25px;cursor:pointer;}
+	.sidebar {
+		position: fixed;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		z-index: 200; /* Behind the navbar */
+	}
+	.dbr1{
+		border-right: 1px solid rgb(197, 194, 194);
+		background-color: rgb(85, 83, 83);
+		box-shadow: 5px 10px 5px #b8b6b6;
+	}
 </style>

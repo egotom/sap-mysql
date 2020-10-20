@@ -9,6 +9,7 @@ const transporter = nodemailer.createTransport({
     secure: false,
 	auth:{user:'',pass:''}
 });
+
 export const ACCESS_TOKEN_SECRET='7404C0014fdec4396807ab9e100fe307b9d8feE645f22703ee81d1a54af0b63938bd91587f1813'
 export const REFRESH_TOKEN_SECRET='01e96440e8b307c40228aa57a5edf3b7fb6a039D00b958aeb042ea2d757360a15cc273639587c1'
 
@@ -47,22 +48,17 @@ export async function  post(req, res){
 			if(await bcrypt.compare(password, passwd)) {
 				const accessToken = generateAccessToken({name, email,avatar})
 				if(remember){
-					const refreshToken = jwt.sign({name, email,avatar}, REFRESH_TOKEN_SECRET)
-					db.query(`update user set refresh_token=?,login_at=? where email = ? `,[refreshToken,now(new Date()),email],(err,results)=>{
-						if(err) console.log(JSON.stringify(err),JSON.stringify(results))
-					})
+					const refreshToken = jwt.sign({name, email,avatar}, REFRESH_TOKEN_SECRET,{ expiresIn: '7d'})// will expired after 7 days
+					//db.query(`update user set refresh_token=?,login_at=? where email = ? `,[refreshToken,now(new Date()),email],(err,results)=>{
+					//	if(err) console.log(JSON.stringify(err),JSON.stringify(results))
+					//})
 					res.cookie('refresh',refreshToken, {
 						expires: new Date(Date.now() + 7 * 86400000) ,secure:false // cookie will be removed after 7 days
-					}).cookie('auth',accessToken,{secure:false }).cookie('name',name,{secure:false })
-					.cookie('email',email,{secure:false }).cookie('avatar',avatar,{secure:false })
+					}).cookie('auth',accessToken,{secure:false })
 					json(res, { accessToken: accessToken, name:name, email:email, avatar:avatar,erno:0})
 				}else{
-					db.query(`update user set refresh_token=?,login_at=? where email = ? `,['',now(new Date()),email],(err,results)=>{
-						if(err) console.log(JSON.stringify(err),JSON.stringify(results))
-					})	
 					//res.cookie('auth',JSON.stringify({accessToken:'Bearer ' +accessToken, name:name,email:email,avatar:avatar }))
-					res.cookie('auth',accessToken,{secure:false }).cookie('name',name,{secure:false })
-						.cookie('email',email,{secure:false }).cookie('avatar',avatar,{secure:false })
+					res.cookie('auth',accessToken,{secure:false })
 					json(res, { accessToken: accessToken, name:name, email:email, avatar:avatar,erno:0})
 				}
 				
@@ -186,7 +182,7 @@ export function json(res,son){
 }
 
 export function generateAccessToken(user) {
-	return jwt.sign(user, ACCESS_TOKEN_SECRET, { expiresIn: '15m' })
+	return jwt.sign(user, ACCESS_TOKEN_SECRET, { expiresIn: '45m' })
 }
 
 export const auth= (token) => {

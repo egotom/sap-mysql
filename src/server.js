@@ -18,16 +18,18 @@ app.use(
 		(req, res, next) => {
 			const token = req.cookies['auth']
 			const refresh = req.cookies['refresh']
-			let ctn=false
-			if(token){					
+			let ctn=true
+			if(token){
+				ctn=false			
 				let profile=auth(token)
-				if(!!profile){	
+				if(!!profile){
 					return sapper.middleware({session: () => ({authenticated: true,profile:profile})})(req, res, next)
 				}
 				ctn=true
 			}
 			if(refresh && ctn){
 				let {auth,name,email,avatar}= refreshToken(refresh)
+				//console.log(name,email,avatar)
 				res.cookie('auth',auth,{secure:false }).cookie('name',name,{secure:false })
 					.cookie('email',email,{secure:false }).cookie('avatar',avatar,{secure:false })
 				return sapper.middleware({session: () => ({authenticated: !!name,profile:{name,email,avatar}})})(req, res, next)

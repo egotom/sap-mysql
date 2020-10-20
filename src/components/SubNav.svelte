@@ -1,6 +1,7 @@
 <script>
-    export let uri;
-    let path='';
+    export let uri, navs, subNavs
+    console.log(JSON.stringify(subNavs),'++++++++++++++++++')
+
     const bread=new Map(
         [["", "热门"], ["hr", "人力资源"], ["rental", "出租-招租"], ["sale", "出售"], ["want", "求购"], ["others", "其它"], 
         ["resume", "简历"], ["hr", "人力资源"]]);
@@ -19,24 +20,6 @@
 <div class="border rounded-lg shadow-sm p-3 mb-4 mt-0 bg-light">
     <span class="d-inline-block border-bottom mb-4"> 
         <a class:active="{1 === 2}" class="snl text-dark d-inline-block ml-3 pb-2" href="{uri.path}/resume">简历</a> </span>
-    <span class="d-inline-block border-bottom mb-4"> 
-        <a class:active="{1 === 2}" class="snl text-dark d-inline-block ml-3 pb-2" href=" ">手动阀</a> </span>
-    <span class="d-inline-block border-bottom mb-4"> 
-        <a class:active="{1 === 2}" class="snl text-dark d-inline-block ml-3 pb-2" href=" ">手动阀</a> </span>
-    <span class="d-inline-block border-bottom mb-4"> 
-        <a class:active="{1 === 1}" class="snl text-dark d-inline-block ml-3 pb-2" href=" ">手动阀手动阀</a> </span>
-    <span class="d-inline-block border-bottom mb-4"> 
-        <a class:active="{1 === 2}" class="snl text-dark d-inline-block ml-3 pb-2" href=" ">手动阀手动阀</a> </span>
-    <span class="d-inline-block border-bottom mb-4"> 
-        <a class:active="{1 === 2}" class="snl text-dark d-inline-block ml-3 pb-2" href=" ">手手动阀</a> </span>
-    <span class="d-inline-block border-bottom mb-4"> 
-        <a class:active="{1 === 2}" class="snl text-dark d-inline-block ml-3 pb-2" href=" ">手动阀</a> </span>
-    <span class="d-inline-block border-bottom mb-4"> 
-        <a class:active="{1 === 2}" class="snl text-dark d-inline-block ml-3 pb-2" href=" ">手动阀</a> </span>
-    <span class="d-inline-block border-bottom mb-4"> 
-        <a class:active="{1 === 2}" class="snl text-dark d-inline-block ml-3 pb-2" href=" ">手动阀手动阀</a> </span>
-    <span class="d-inline-block border-bottom mb-4"> 
-        <a class:active="{1 === 2}" class="snl text-dark d-inline-block ml-3 pb-2" href=" ">手动阀手动阀</a> </span>
 </div>
 {/if}
 <style>
