@@ -4,7 +4,7 @@ import compression from 'compression'
 import * as sapper from '@sapper/server'
 import cookieParser from 'cookie-parser'
 import {auth,refreshToken} from './routes/auth'
-
+//import {Logger} from './logger'
 const { json } = require('body-parser');
 const { PORT, NODE_ENV } = process.env;
 const dev = NODE_ENV === 'development';
@@ -15,6 +15,7 @@ app.use(
 		compression({ threshold: 0 }),
 		sirv('static', { dev }),
 		cookieParser(),
+		//Logger,
 		(req, res, next) => {
 			const token = req.cookies['auth']
 			const refresh = req.cookies['refresh']

@@ -1,22 +1,26 @@
+<script context="module">
+	export function preload() {
+		return this.fetch(`index.json`).then(r => r.json()).then(navs => {
+			return {navs};
+		});
+	}
+</script>
+
 <script>
 	import {stores} from '@sapper/app'
-	import { onMount } from 'svelte'
+	import { setContext } from 'svelte'
+	import { writable } from 'svelte/store'
 	import Nav from '../components/Nav.svelte'
 	import Profile from '../components/Profile.svelte'
 	import SubNav from '../components/SubNav.svelte'
 
-	const { page, session } = stores()
-	export let segment
-	let adv=true, hots=true, pfo=true, mainWidth=768, navs=[],subNavs=[]
-	$: side=(mainWidth<768)? false:true
+	export let segment, navs
+	//console.log(JSON.stringify(navs),'8888888888888888888888888')
+	setContext("navs", writable(navs));
+	let adv=true, hots=true, pfo=true, mainWidth=768
+	const { session, page } = stores()
 
-	onMount(() => {
-		fetch(`index.json`).then(r => r.json()).then(data => {
-			navs=data.navs
-			subNavs=data.subNavs
-			console.log(JSON.stringify(subNavs),'##########')
-		})
-	})
+	$: side=(mainWidth<768)? false:true
 
 	const onFocus =()=>{hots=false;adv=true;pfo=true;}
 	const onBlur =()=>{hots=true};
@@ -162,19 +166,21 @@
 <div class="container-fluid mt-5 pt-4">
 	<div class="row mt-2 mt-lg-2 mt-sm-5">
 		<nav class="col-md-3 col-lg-2 col-sm-6 d-md-block bg-white sidebar pt-5 pl-0" class:dbr1={(mainWidth<768)}>
-			<Nav segment={segment} navs={navs} />
+			<Nav {segment} {navs} />
 		</nav>
 		<div class="col-md-9 col-lg-10 ml-sm-auto  px-md-5 px-lg-5 px-sm-2">
 			<div class="col-md-12 ml-sm-12 col-lg-12 px-md-5 px-lg-5 px-sm-2">
 				<div class="row pt-3">
 					<div class="col-lg-8 col-md-8 col-sm-12 px-md-2 px-sm-3 order-md-0 order-sm-1">
-						<slot {segment}></slot>
+						<slot>  </slot>
 					</div>
 					<div class="col-lg-4 col-md-4 col-sm-12 pt-md-5 pt-sm-0 px-md-5 px-sm-3 order-md-1 order-sm-0 mb-5">
 						<div class="border rounded-lg shadow-sm p-3 mb-4 mt-md-1 mt-sm-0">
 							<Profile />
 						</div>
-						<div><SubNav uri={$page} navs={navs} subNavs={subNavs} /></div>		
+						{#if $page.path!=="/"}
+							<div><SubNav {navs}/></div>	
+						{/if}	
 						<div class="border rounded-lg shadow-sm p-3 mb-4 mt-md-1 mt-sm-0 bg-light">
 							<div class="d-flex justify-content-center">
 								<div class="col-3 text-center">
@@ -189,19 +195,20 @@
 	</div>
 </div>
 {:else}
-<div class="container-fluid mt-5 pt-4 px-md-5 px-lg-5 px-sm-1">
+<div class="container-fluid mt-5 pt-4 px-md-4 px-lg-4 px-sm-1">
 	<div class="row mt-2 mt-lg-2 mt-sm-5 px-md-5 px-lg-5 px-sm-2">
 		<div class="col-md-12 ml-sm-12 col-lg-12 px-md-5 px-lg-5 px-sm-2">
 			<div class="row pt-3">
 				<div class="col-lg-8 col-md-8 col-sm-12 px-md-2 px-sm-3 order-md-0 order-sm-1">
-					<slot {segment}></slot>
+					<slot></slot>
 				</div>
 				<div class="col-lg-4 col-md-4 col-sm-12 pt-md-5 pt-sm-0 px-md-5 px-sm-3 order-md-1 order-sm-0 mb-5">
 					<div class="border rounded-lg shadow-sm p-3 mb-4 mt-md-1 mt-sm-0">
 						<Profile />
 					</div>
-					<div><SubNav uri={$page} navs={navs} subNavs={subNavs} /></div>		
-			
+					{#if $page.path!=="/"}
+						<div><SubNav {navs}/></div>	
+					{/if}			
 					<div class="border rounded-lg shadow-sm p-3 mb-4 mt-md-1 mt-sm-0 bg-light">
 						<div class="d-flex justify-content-center">
 							<div class="col-3 text-center">

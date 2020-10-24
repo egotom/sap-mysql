@@ -13,39 +13,62 @@
 
 
 -- Dumping database structure for air_compressor
-DROP DATABASE IF EXISTS `air_compressor`;
 CREATE DATABASE IF NOT EXISTS `air_compressor` /*!40100 DEFAULT CHARACTER SET utf8 */;
 USE `air_compressor`;
 
 -- Dumping structure for table air_compressor.catalog
-DROP TABLE IF EXISTS `catalog`;
 CREATE TABLE IF NOT EXISTS `catalog` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `owner_id` int(10) unsigned NOT NULL DEFAULT 0 COMMENT 'public 公共目录=0。',
   `parent_id` int(10) unsigned NOT NULL DEFAULT 0,
   `rank` int(10) unsigned NOT NULL DEFAULT 0,
-  `container` tinyint(1) NOT NULL DEFAULT 0 COMMENT '是否包含内容',
+  `container` tinyint(1) unsigned NOT NULL DEFAULT 1 COMMENT '是否包含内容',
   `name` varchar(50) NOT NULL DEFAULT '',
   `link` varchar(50) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8;
 
--- Dumping data for table air_compressor.catalog: ~10 rows (approximately)
+-- Dumping data for table air_compressor.catalog: ~36 rows (approximately)
 /*!40000 ALTER TABLE `catalog` DISABLE KEYS */;
-INSERT INTO `catalog` (`id`, `parent_id`, `rank`, `container`, `name`, `link`) VALUES
-	(1, 0, 2, 0, '热门', '.'),
-	(2, 0, 1, 1, '招聘信息', 'recruit'),
-	(3, 0, 1, 1, '求职信息', 'resume'),
-	(4, 0, 1, 1, '出售', 'sale'),
-	(5, 0, 1, 1, '求购', 'want'),
-	(6, 0, 1, 1, '吃喝玩乐', 'nearby'),
-	(7, 0, 0, 1, '其他', 'others'),
-	(8, 0, 1, 1, '出租', 'rental'),
-	(9, 2, 0, 1, '全职', 'full-time'),
-	(10, 2, 0, 1, '兼职', 'part-time');
+INSERT INTO `catalog` (`id`, `owner_id`, `parent_id`, `rank`, `container`, `name`, `link`) VALUES
+	(2, 0, 0, 1, 1, '招聘信息', 'recruit'),
+	(3, 0, 0, 1, 1, '求职信息', 'resume'),
+	(4, 0, 0, 1, 1, '出售 | 服务', 'sale'),
+	(5, 0, 0, 1, 1, '求购', 'want'),
+	(6, 0, 0, 1, 1, '吃喝玩乐', 'nearby'),
+	(7, 0, 0, 0, 1, '其他', 'others'),
+	(8, 0, 0, 1, 1, '出租', 'rental'),
+	(9, 0, 2, 0, 1, '全职', 'full-time'),
+	(10, 0, 2, 0, 1, '兼职', 'part-time'),
+	(11, 0, 4, 0, 1, '家政', 'household'),
+	(12, 0, 4, 0, 1, '货运', 'cargo'),
+	(13, 0, 4, 0, 1, '维修|装修', 'maintain'),
+	(14, 0, 4, 0, 1, '二手市场', 'market'),
+	(15, 0, 4, 0, 1, '商务服务', 'business'),
+	(16, 0, 15, 0, 1, '批发采购', 'wholesale'),
+	(17, 0, 15, 0, 1, '招商加盟', 'franchise'),
+	(18, 0, 6, 0, 1, '健身|运动', 'gym'),
+	(19, 0, 6, 0, 1, '旅游|户外', 'outdoor'),
+	(20, 0, 6, 0, 1, '餐饮美食', 'catering'),
+	(21, 0, 6, 0, 1, '丽人', 'beauty'),
+	(22, 0, 6, 0, 1, '宠物|业余爱好', 'hobby'),
+	(23, 0, 15, 0, 1, '广告', 'ad'),
+	(24, 0, 8, 0, 1, '单间出租', 'single'),
+	(25, 0, 8, 0, 1, '单间求租', 'single-rental'),
+	(26, 0, 8, 0, 1, '整租', 'whole'),
+	(27, 0, 8, 0, 1, '合租', 'flat'),
+	(28, 0, 8, 0, 1, '商铺出租', 'shops'),
+	(29, 0, 8, 0, 1, '办公室出租', 'office'),
+	(30, 0, 8, 0, 1, '酒店|民宿', 'lodge'),
+	(31, 0, 8, 0, 1, '厂房|仓库出租', 'plant'),
+	(32, 0, 8, 0, 1, '设备出租', 'device'),
+	(33, 0, 14, 0, 1, '家具|家电', 'domestic'),
+	(34, 0, 14, 0, 1, '二手车', 'vehicle'),
+	(35, 0, 14, 0, 1, '二手设备', 'facility'),
+	(36, 0, 14, 0, 1, '二手房', 'apartment');
 /*!40000 ALTER TABLE `catalog` ENABLE KEYS */;
 
 -- Dumping structure for table air_compressor.history
-DROP TABLE IF EXISTS `history`;
 CREATE TABLE IF NOT EXISTS `history` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `uid` int(10) unsigned DEFAULT 0,
@@ -61,35 +84,77 @@ CREATE TABLE IF NOT EXISTS `history` (
 /*!40000 ALTER TABLE `history` DISABLE KEYS */;
 /*!40000 ALTER TABLE `history` ENABLE KEYS */;
 
--- Dumping structure for table air_compressor.posts
-DROP TABLE IF EXISTS `posts`;
-CREATE TABLE IF NOT EXISTS `posts` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+-- Dumping structure for table air_compressor.product
+CREATE TABLE IF NOT EXISTS `product` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `owner_id` int(10) unsigned NOT NULL,
+  `pub_catalog` int(10) unsigned NOT NULL,
+  `prv_catalog` int(10) unsigned NOT NULL,
   `title` varchar(50) DEFAULT '',
   `slug` varchar(50) DEFAULT '',
   `html` text DEFAULT '',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
--- Dumping data for table air_compressor.posts: ~4 rows (approximately)
-/*!40000 ALTER TABLE `posts` DISABLE KEYS */;
-INSERT INTO `posts` (`id`, `title`, `slug`, `html`) VALUES
-	(1, 'How to use Sapper', 'how-to-use-sapper', '<h2>Step one</h2>\r\n			<p>Create a new project, using <a href=\'https://github.com/Rich-Harris/degit\'>degit</a>:</p>\r\n\r\n			<pre><code>npx degit "sveltejs/sapper-template#rollup" my-app\r\n			cd my-app\r\n			npm install # or yarn!\r\n			npm run dev\r\n			</code></pre>\r\n\r\n			<h2>Step two</h2>\r\n			<p>Go to <a href=\'http://localhost:3000\'>localhost:3000</a>. Open <code>my-app</code> in your editor. Edit the files in the <code>src/routes</code> directory or add new ones.</p>\r\n\r\n			<h2>Step three</h2>\r\n			<p>...</p>\r\n\r\n			<h2>Step four</h2>\r\n			<p>Resist overdone joke formats.</p>\r\n\r\n<p>Create a new project, using <a href=\'https://github.com/Rich-Harris/degit\'>degit</a>:</p>\r\n\r\n			<pre><code>npx degit "sveltejs/sapper-template#rollup" my-app\r\n			cd my-app\r\n			npm install # or yarn!\r\n			npm run dev\r\n			</code></pre>\r\n\r\n			<h2>Step two</h2>\r\n			<p>Go to <a href=\'http://localhost:3000\'>localhost:3000</a>. Open <code>my-app</code> in your editor. Edit the files in the <code>src/routes</code> directory or add new ones.</p>\r\n\r\n			<h2>Step three</h2>\r\n			<p>...</p>\r\n\r\n			<h2>Step four</h2>\r\n			<p>Resist overdone joke formats.</p>\r\n\r\n<p>Create a new project, using <a href=\'https://github.com/Rich-Harris/degit\'>degit</a>:</p>\r\n\r\n			<pre><code>npx degit "sveltejs/sapper-template#rollup" my-app\r\n			cd my-app\r\n			npm install # or yarn!\r\n			npm run dev\r\n			</code></pre>\r\n\r\n			<h2>Step two</h2>\r\n			<p>Go to <a href=\'http://localhost:3000\'>localhost:3000</a>. Open <code>my-app</code> in your editor. Edit the files in the <code>src/routes</code> directory or add new ones.</p>\r\n\r\n			<h2>Step three</h2>\r\n			<p>...</p>\r\n\r\n			<h2>Step four</h2>\r\n			<p>Resist overdone joke formats.</p>\r\n\r\n<p>Create a new project, using <a href=\'https://github.com/Rich-Harris/degit\'>degit</a>:</p>\r\n\r\n			<pre><code>npx degit "sveltejs/sapper-template#rollup" my-app\r\n			cd my-app\r\n			npm install # or yarn!\r\n			npm run dev\r\n			</code></pre>\r\n\r\n			<h2>Step two</h2>\r\n			<p>Go to <a href=\'http://localhost:3000\'>localhost:3000</a>. Open <code>my-app</code> in your editor. Edit the files in the <code>src/routes</code> directory or add new ones.</p>\r\n\r\n			<h2>Step three</h2>\r\n			<p>...</p>\r\n\r\n			<h2>Step four</h2>\r\n			<p>Resist overdone joke formats.</p>'),
-	(2, 'What is Sapper?', 'what-is-sapper', '<p>First, you have to know what <a href=\'https://svelte.dev\'>Svelte</a> is. Svelte is a UI framework with a bold new idea: rather than providing a library that you write code with (like React or Vue, for example), it\'s a compiler that turns your components into highly optimized vanilla JavaScript. If you haven\'t already read the <a href=\'https://svelte.dev/blog/frameworks-without-the-framework\'>introductory blog post</a>, you should!</p>'),
-	(3, 'Why the name?', 'why-the-name', '<p>In war, the soldiers who build bridges, repair roads, clear minefields and conduct demolitions — all under combat conditions — are known as <em>sappers</em>.</p>'),
-	(4, 'How is Sapper different from Next.js?', 'how-is-sapper-different-from-next', '<p><a href=\'https://github.com/zeit/next.js\'>Next.js</a> is a React framework from <a href=\'https://vercel.com/\'>Vercel</a>, and is the inspiration for Sapper. There are a few notable differences, however:</p>'),
-	(5, 'How can I get involved?', 'how-can-i-get-involved', '<p>We\'re so glad you asked! Come on over to the <a href=\'https://github.com/sveltejs/svelte\'>Svelte</a> and <a href=\'https://github.com/sveltejs/sapper\'>Sapper</a> repos, and join us in the <a href=\'https://svelte.dev/chat\'>Discord chatroom</a>. Everyone is welcome, especially you!</p>');
-/*!40000 ALTER TABLE `posts` ENABLE KEYS */;
+-- Dumping data for table air_compressor.product: ~0 rows (approximately)
+/*!40000 ALTER TABLE `product` DISABLE KEYS */;
+/*!40000 ALTER TABLE `product` ENABLE KEYS */;
+
+-- Dumping structure for table air_compressor.product_attribute_name
+CREATE TABLE IF NOT EXISTS `product_attribute_name` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `product_id` int(10) unsigned NOT NULL,
+  `name` varchar(50) NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Dumping data for table air_compressor.product_attribute_name: ~0 rows (approximately)
+/*!40000 ALTER TABLE `product_attribute_name` DISABLE KEYS */;
+/*!40000 ALTER TABLE `product_attribute_name` ENABLE KEYS */;
+
+-- Dumping structure for table air_compressor.product_attribute_value
+CREATE TABLE IF NOT EXISTS `product_attribute_value` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `name_id` int(10) unsigned NOT NULL,
+  `val` varchar(50) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Dumping data for table air_compressor.product_attribute_value: ~0 rows (approximately)
+/*!40000 ALTER TABLE `product_attribute_value` DISABLE KEYS */;
+/*!40000 ALTER TABLE `product_attribute_value` ENABLE KEYS */;
+
+-- Dumping structure for table air_compressor.product_image
+CREATE TABLE IF NOT EXISTS `product_image` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `product_id` varchar(50) NOT NULL DEFAULT '',
+  `title` varchar(50) NOT NULL DEFAULT '',
+  `path` varchar(50) NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Dumping data for table air_compressor.product_image: ~0 rows (approximately)
+/*!40000 ALTER TABLE `product_image` DISABLE KEYS */;
+/*!40000 ALTER TABLE `product_image` ENABLE KEYS */;
+
+-- Dumping structure for table air_compressor.product_tag
+CREATE TABLE IF NOT EXISTS `product_tag` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `title` varchar(50) NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Dumping data for table air_compressor.product_tag: ~0 rows (approximately)
+/*!40000 ALTER TABLE `product_tag` DISABLE KEYS */;
+/*!40000 ALTER TABLE `product_tag` ENABLE KEYS */;
 
 -- Dumping structure for table air_compressor.user
-DROP TABLE IF EXISTS `user`;
 CREATE TABLE IF NOT EXISTS `user` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL DEFAULT '',
   `email` varchar(50) NOT NULL DEFAULT '',
   `passwd` varchar(200) NOT NULL DEFAULT '',
   `avatar` varchar(50) DEFAULT '',
-  `refresh_token` varchar(200) DEFAULT '',
   `active` tinyint(1) unsigned NOT NULL DEFAULT 0,
   `login_at` timestamp NULL DEFAULT NULL,
   `update_at` timestamp NULL DEFAULT NULL,
@@ -100,11 +165,11 @@ CREATE TABLE IF NOT EXISTS `user` (
 
 -- Dumping data for table air_compressor.user: ~4 rows (approximately)
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` (`id`, `name`, `email`, `passwd`, `avatar`, `refresh_token`, `active`, `login_at`, `update_at`, `create_at`) VALUES
-	(1, 'egotom', 'egotom@gmail.com', '$2b$10$ieN1GUAwwPo9ha2GViRxFuP55t/qBaGhCnblQb2DZMbyaZkNyhHHu', 'avatar.jpg', '', 1, '2020-10-19 16:28:09', NULL, '2020-10-14 15:53:15'),
-	(9, 'kk', 'kk@kk.com', '$2b$10$1vGcxLJqX37kHGFuUFFe..gMgOR4les3fQ2PLKFp7C2AGp58Ue.0O', 'avatar.jpg', '', 1, '2020-10-19 16:10:29', NULL, '2020-10-15 08:34:33'),
-	(22, '123', '123@kk.com', '$2b$10$xokXbdErljQLIvhHaGdYmu/VRG3ks8wbEGejpDnsJd1.uQiu4GpPe', '', '', 0, NULL, NULL, '2020-10-15 08:51:47'),
-	(25, 'dsdad', '12345678@ww.com', '$2b$10$lnNWCIBYc8kXnGsdYZ3OBuDEVyWFU51lhZGwfBoCEPtpp0qcAfg4u', '', '', 0, NULL, NULL, '2020-10-15 09:02:43');
+INSERT INTO `user` (`id`, `name`, `email`, `passwd`, `avatar`, `active`, `login_at`, `update_at`, `create_at`) VALUES
+	(1, 'egotom', 'egotom@gmail.com', '$2b$10$ieN1GUAwwPo9ha2GViRxFuP55t/qBaGhCnblQb2DZMbyaZkNyhHHu', 'avatar.jpg', 1, '2020-10-20 09:11:25', NULL, '2020-10-14 15:53:15'),
+	(9, 'kk', 'kk@kk.com', '$2b$10$1vGcxLJqX37kHGFuUFFe..gMgOR4les3fQ2PLKFp7C2AGp58Ue.0O', 'avatar.jpg', 1, '2020-10-20 09:08:21', NULL, '2020-10-15 08:34:33'),
+	(22, '123', '123@kk.com', '$2b$10$xokXbdErljQLIvhHaGdYmu/VRG3ks8wbEGejpDnsJd1.uQiu4GpPe', '', 0, NULL, NULL, '2020-10-15 08:51:47'),
+	(25, 'dsdad', '12345678@ww.com', '$2b$10$lnNWCIBYc8kXnGsdYZ3OBuDEVyWFU51lhZGwfBoCEPtpp0qcAfg4u', '', 0, NULL, NULL, '2020-10-15 09:02:43');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
