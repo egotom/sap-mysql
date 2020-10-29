@@ -2,15 +2,14 @@
 	export let segment, navs
 	let mnv=navs.filter(n=>n.parent_id===0)
 </script>
-
-	<div class="sidebar-sticky pt-md-3 pt-sm-5">
-		<ul class="position-absolute nav flex-column pt-md-4">
-			<li><a class:active="{segment === undefined}" class="nav-link active pl-4 py-3 "  href=".">即时 | 热门</a></li>
-			{#each mnv as {name, link}}
-			<li><a class:active="{segment === link}" class="nav-link active pl-4 py-3 "  href="{link}">{name}</a></li>
-			{/each}
-		</ul>
-	</div>
+<div class="sidebar-sticky pt-md-3 pt-sm-5">
+	<ul class="position-absolute nav flex-column pt-md-4 pt-sm-5 ">
+		<li><a class:active="{segment === undefined}" class="nav-link active pl-4 py-3 "  href=".">即时 | 热门</a></li>
+		{#each mnv as {name, link}}
+		<li><a class:active="{segment === link}" class="nav-link active pl-4 py-3 "  href="{link}">{name}</a></li>
+		{/each}
+	</ul>
+</div>
 
 <style>
 	.active{

@@ -19,7 +19,8 @@
     "jsonwebtoken": "^8.5.1",
     "mysql": "^2.18.1",
     "nodemailer": "^6.4.14",
-    "sirv": "^1.0.0"
+    "sirv": "^1.0.0",
+    "svelte-tags-input": "^2.6.5"
   },
   "devDependencies": {
     "sapper": "^0.28.0",

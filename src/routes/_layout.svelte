@@ -24,7 +24,6 @@
 
 	const onFocus =()=>{hots=false;adv=true;pfo=true;}
 	const onBlur =()=>{hots=true};
-	const onPfo=()=>{pfo=!pfo;adv=true;hots=true}
 	const onAdv=()=>{adv=!adv;pfo=true;hots=true}
 	const onSide=()=>{side=!side;}
 	const logout=()=>{
@@ -39,8 +38,8 @@
 	}
 </script>
 <svelte:window bind:innerWidth={mainWidth}/>
-<div class="container-fluid mb-5 fixed-top bg-white justify-content-md-between justify-content-sm-between" >
-<nav class="row py-2 shadow">
+<div class="container-fluid mb-5 fixed-top bg-white justify-content-between" >
+<nav class="row py-2 shadow ">
 	<div class="col-md-3 col-lg-3 order-md-0 order-sm-0  col-sm-4 d-flex justify-content-start">
 		<span class="navbar-brand side-btn" on:click={onSide}>
 			<svg width="1.7em" height="1.7em" viewBox="0 0 16 16" class="bi bi-list" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -125,40 +124,6 @@
 		</div>
 	</div>
 	</div>
-	<div class="col-md-3 col-lg-3 order-md-2 order-sm-1 col-sm-8 d-flex justify-content-end">
-		{#if $session.authenticated}
-		<a href=" " class="avatar rounded-circle" on:click={onPfo}>
-			<img alt=" " src="{$session.profile.avatar}">
-		</a>
-		<div class:show="{pfo}" class="dropmenu border shadow-sm rounded bg-white p-5">
-			<div class="container">
-				<div class="row">
-				  <div class="col col-sm-12 d-flex justify-content-center">
-					<img src="{$session.profile.avatar}" alt="" class="avatar-lg mb-2">
-					<a class="btn-upload bg-white px-1 pb-1 text-secondary " href=" ">	
-						<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-camera" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-							<path fill-rule="evenodd" d="M15 12V6a1 1 0 0 0-1-1h-1.172a3 3 0 0 1-2.12-.879l-.83-.828A1 1 0 0 0 9.173 3H6.828a1 1 0 0 0-.707.293l-.828.828A3 3 0 0 1 3.172 5H2a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1zM2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.172a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 9.172 2H6.828a2 2 0 0 0-1.414.586l-.828.828A2 2 0 0 1 3.172 4H2z"/>
-							<path fill-rule="evenodd" d="M8 11a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zm0 1a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/>
-							<path d="M3 6.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0z"/>
-						</svg>
-					</a>
-				  </div>
-				</div>
-				<div class="row ">
-				  <div class="col col-sm-12  justify-content-center">
-					<p class="text-center my-0">{$session.profile.name}</p>
-					<p class="text-center mb-4 text-primary">{$session.profile.email}</p>
-				  </div>
-				</div>
-				<div class="row ">
-					<div class="col col-sm-12 d-flex justify-content-center">
-						<button class="btn btn-outline-secondary btn-sm" on:click="{logout}">退出登录</button>
-					</div>
-				</div>
-			</div>
-		</div>
-		{/if}
-	</div>
 </nav>
 </div>
 
@@ -166,22 +131,24 @@
 <div class="container-fluid mt-5 pt-4">
 	<div class="row mt-2 mt-lg-2 mt-sm-5">
 		<nav class="col-md-3 col-lg-2 col-sm-6 d-md-block bg-white sidebar pt-5 pl-0" class:dbr1={(mainWidth<768)}>
+			<div class="mt-3 pt-3">
 			<Nav {segment} {navs} />
+			</div>
 		</nav>
-		<div class="col-md-9 col-lg-10 ml-sm-auto  px-md-5 px-lg-5 px-sm-2">
-			<div class="col-md-12 ml-sm-12 col-lg-12 px-md-5 px-lg-5 px-sm-2">
+		<div class="col-md-9 col-lg-10 ml-sm-auto">
+			<div class="col-md-12 ml-sm-12 col-lg-12 ">
 				<div class="row pt-3">
-					<div class="col-lg-8 col-md-8 col-sm-12 px-md-2 px-sm-3 order-md-0 order-sm-1">
+					<div class="col-lg-8 col-md-8 col-sm-12 order-md-0 order-sm-1">
 						<slot>  </slot>
 					</div>
-					<div class="col-lg-4 col-md-4 col-sm-12 pt-md-5 pt-sm-0 px-md-5 px-sm-3 order-md-1 order-sm-0 mb-5">
-						<div class="border rounded-lg shadow-sm p-3 mb-4 mt-md-1 mt-sm-0">
+					<div class="col-lg-4 col-md-4 col-sm-12 pt-md-5 pt-sm-0 mb-5 order-md-1 order-sm-0">
+						<div class="border rounded-lg shadow-sm  mb-4 mt-md-1 mt-sm-0">
 							<Profile />
 						</div>
 						{#if $page.path!=="/"}
 							<div><SubNav {navs}/></div>	
 						{/if}	
-						<div class="border rounded-lg shadow-sm p-3 mb-4 mt-md-1 mt-sm-0 bg-light">
+						<div class="border rounded-lg shadow-sm  mb-4 mt-md-1 mt-sm-0 bg-light">
 							<div class="d-flex justify-content-center">
 								<div class="col-3 text-center">
 									<h2 class="text-warning">这里应该有广告</h2>
@@ -195,21 +162,23 @@
 	</div>
 </div>
 {:else}
-<div class="container-fluid mt-5 pt-4 px-md-4 px-lg-4 px-sm-1">
-	<div class="row mt-2 mt-lg-2 mt-sm-5 px-md-5 px-lg-5 px-sm-2">
-		<div class="col-md-12 ml-sm-12 col-lg-12 px-md-5 px-lg-5 px-sm-2">
-			<div class="row pt-3">
-				<div class="col-lg-8 col-md-8 col-sm-12 px-md-2 px-sm-3 order-md-0 order-sm-1">
+<div class="container-fluid mt-5 pt-4 ">
+	<div class="row mt-2 mt-lg-2 mt-sm-5">
+		<div class="col-md-12 ml-sm-12 col-lg-12">
+			<div class="row pt-3 ">
+				<div class="col-lg-9 col-md-9 col-sm-12 pl-md-4 pl-sm-0 order-md-0 order-sm-1">
+					<div class="pl-md-2">
 					<slot></slot>
+					</div>
 				</div>
-				<div class="col-lg-4 col-md-4 col-sm-12 pt-md-5 pt-sm-0 px-md-5 px-sm-3 order-md-1 order-sm-0 mb-5">
-					<div class="border rounded-lg shadow-sm p-3 mb-4 mt-md-1 mt-sm-0">
+				<div class="col-lg-3 col-md-3 col-sm-12 pt-md-5 pt-sm-0 order-md-1 order-sm-0 mb-5 ">
+					<div class="border rounded-lg shadow-sm mb-4 mt-md-1 mt-sm-0">
 						<Profile />
 					</div>
 					{#if $page.path!=="/"}
 						<div><SubNav {navs}/></div>	
 					{/if}			
-					<div class="border rounded-lg shadow-sm p-3 mb-4 mt-md-1 mt-sm-0 bg-light">
+					<div class="border rounded-lg shadow-sm mb-4 mt-md-1 mt-sm-0 bg-light">
 						<div class="d-flex justify-content-center">
 							<div class="col-3 text-center">
 								<h2 class="text-warning">这里应该有广告</h2>
@@ -244,19 +213,6 @@
 		transition: text-indent 0.4s 0.4s ease; 
 		text-indent: -100%;
 		opacity: 1;
-	}
-	.avatar img{width: 35px;height: 35px;}
-	.avatar img:hover{border:3px solid rgb(184, 178, 178);}
-	.avatar-lg {width: 85px; height: 85px;}
-	.rounded-circle img {border-radius:21px;}
-	.straight{ flex-wrap: nowrap;}
-	.btn-upload{
-		position: absolute;
-		margin-top:70px;
-		margin-left:70px;;
-		z-index: 6;
-		border-radius:30px;
-		border:1px solid rgb(184, 178, 178);
 	}
 	.side-btn {padding:6px;}
 	.side-btn:hover{background-color: rgb(184, 178, 178); border-radius:25px;cursor:pointer;}
