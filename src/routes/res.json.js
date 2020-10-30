@@ -2,14 +2,14 @@ import db from '../mysql.js';
 
 export function get(req, res) {
     if(req.query.area_code){
-        db.query(`SELECT area_code,short_name FROM res_cn WHERE parent_code=?`,[req.query.area_code],(err,rst)=>{
+        db.query(`SELECT area_code,short_name FROM res_addr WHERE parent_code=?`,[req.query.area_code],(err,rst)=>{
             if(err) res.status(500).end() 
             else{
                 // 北京，天津，上海，重庆
                 if([110100000000,120100000000,310100000000,500100000000].indexOf(rst[0].area_code)<0)
                     res.json(rst)
                 else                
-                    db.query(`SELECT area_code,short_name FROM res_cn WHERE parent_code=?`,[rst[0].area_code],(err,rst2)=>{
+                    db.query(`SELECT area_code,short_name FROM res_addr WHERE parent_code=?`,[rst[0].area_code],(err,rst2)=>{
                         if(err){
                             res.status(500).end()
                         }
@@ -25,9 +25,8 @@ export function get(req, res) {
             else
                 res.json(rst)
         });
-    }
-    else{
-        db.query(`SELECT area_code,short_name FROM res_cn WHERE LEVEL=0`,(err,rst)=>{
+    }else{
+        db.query(`SELECT area_code,short_name FROM res_addr WHERE LEVEL=0`,(err,rst)=>{
             if(err){
                 res.status(500).end()
             }

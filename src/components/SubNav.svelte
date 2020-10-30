@@ -3,8 +3,8 @@
     export let navs
     const { page } = stores()
     $: uri = $page.path.split('/')
+    $: console.log($page)
     const current=(path)=>{
-        //console.log(path)
         let cr=[]
         for(let i in path){
             let nv=navs.find(n=>n.link===path[i])
@@ -25,7 +25,7 @@
 <nav aria-label="breadcrumb ">
     <ol class="breadcrumb border mb-0">
         {#each current(uri) as {name,link}}
-        <li class="breadcrumb-item"><a href="{$page.path}/{link}"> {name} </a></li>
+        <li class="breadcrumb-item"><a href="{$page.hsot}/{$page.path}/{link}"> {name} </a></li>
         {/each}
     </ol>
 </nav>

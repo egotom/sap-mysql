@@ -96,7 +96,7 @@
       </label>
     </div>
     <Error erno={erno} setMode={setMode} />
-    <button class="btn btn-primary btn-inline-block mb-1" type="submit" >登 录</button>
+    <button class="btn btn-primary btn-sm btn-inline-block mb-1" type="submit" >登 录</button>
   </form>  
 <!--注册-->
 {:else if mode===1}
@@ -116,7 +116,7 @@
       </label>
     </div>
     <Error erno={erno} setMode={setMode} />
-    <button class="btn btn-primary btn-inline-block mb-1" type="submit">注 册</button>
+    <button class="btn btn-primary btn-sm btn-inline-block mb-1" type="submit">注 册</button>
   </form>
 <!--修改密码-->
 {:else if mode===2}
