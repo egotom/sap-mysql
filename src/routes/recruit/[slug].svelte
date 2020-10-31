@@ -1,6 +1,6 @@
 <script context="module">
 	export async function preload({ params }) {
-		let exp='', edu='', count='', wages='', welfare=[], other=[],related=[]
+		let exp='', edu='', count='', wages='', welfare=[], other=[],related=[],addr=''
 		const res = await this.fetch(`recruit/${params.slug}.json`);
 		const data = await res.json();
 		const res2 = await this.fetch(`recruit/${params.slug}.json?attr=1`);
@@ -19,8 +19,16 @@
 					welfare.push(data2[i].val)
 				if(data2[i].aid===-1)
 					other.push({id:data2[i].vid, val:data2[i].val})
+				if(data2[i].aid===6){
+					let ad=JSON.parse(data2[i].val)
+					let ret=''
+					for(let i in ad){
+						ret+=ad[i].l+', '
+					}
+					addr= ret.substr(0,ret.length-2)
+				}
 			}
-			return { post: data , exp, edu, count, wages, welfare, other,related};
+			return { post: data , exp, edu, count, wages, welfare, other,related,addr};
 		} else {
 			this.error(res.status, data.message);
 		}
@@ -28,17 +36,10 @@
 </script>
 
 <script>
-	export let post, exp, edu, count, wages, welfare, other, related
+	export let post, addr, exp, edu, count, wages, welfare, other, related
 	import Item from './_Item.svelte'
 	let map=true
-	let addr=JSON.parse(post.addr)
-	const getAddr=(ad)=>{
-		let ret=''
-		for(let i in ad){
-			ret+=ad[i].l+', '
-		}
-		return ret.substr(0,ret.length-2)
-	}
+
 </script>
 
 <svelte:head>
@@ -53,7 +54,7 @@
 <div class="d-flex justify-content-between">
 	<div>
 		<h3 class="text-warning font-weight-bold">{wages}</h3>
-		<p>{getAddr(addr)} {exp} {edu} {count}</p>
+		<p>{addr} {exp} {edu} {count}</p>
 	</div>
 	<div class="align-self-end text-right">
 		<button type="submit" class="btn btn-primary btn-sm mb-2">收藏</button>
@@ -85,7 +86,7 @@
 		<svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-map-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
 			<path fill-rule="evenodd" d="M16 .5a.5.5 0 0 0-.598-.49L10.5.99 5.598.01a.5.5 0 0 0-.196 0l-5 1A.5.5 0 0 0 0 1.5v14a.5.5 0 0 0 .598.49l4.902-.98 4.902.98a.502.502 0 0 0 .196 0l5-1A.5.5 0 0 0 16 14.5V.5zM5 14.09V1.11l.5-.1.5.1v12.98l-.402-.08a.498.498 0 0 0-.196 0L5 14.09zm5 .8V1.91l.402.08a.5.5 0 0 0 .196 0L11 1.91v12.98l-.5.1-.5-.1z"/>
 		</svg>
-	  	{getAddr(addr)}
+	  	{addr}
 	</p>
 
 	<p>
@@ -104,8 +105,8 @@
 </div>
 
 <p class="pt-5 mb-4 pb-0 font-weight-bold">相似职位：</p>
-{#each [1,2,3] as i}
-	<Item {i} />
+{#each related as it}
+	<Item {it} />
 {:else}
 	<p class="font-weight-light text-warning">加载中 ... </p>
 {/each}

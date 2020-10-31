@@ -3,7 +3,7 @@
     export let navs
     const { page } = stores()
     $: uri = $page.path.split('/')
-    $: console.log($page)
+    //$: console.log($page)
     const current=(path)=>{
         let cr=[]
         for(let i in path){

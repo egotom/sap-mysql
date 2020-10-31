@@ -1,19 +1,22 @@
 <script context="module">
 	export async function  preload() {
-        let pvc=[],idt=[],tags=[]
+        let pvc=[],idt=[],tags=[],its=[],jobs=[]
         const res = await this.fetch(`res.json`)
         if (res.status === 200) {
 			pvc = await res.json();			
         }
-        const res2 = await this.fetch(`res.json?industry=1`)
-        if (res2.status === 200) {
-			idt = await res2.json();			
+		let res4 = await this.fetch(`recruit/list.json`)
+        if (res4.status === 200) {
+			its = await res4.json();			
 		}
-		const res3 = await this.fetch(`tags.json?cid=2`)
-        if (res3.status === 200) {
-			tags = await res3.json();			
+		res4 = await this.fetch(`res.json?ijt=1`)
+        if (res4.status === 200) {
+			let a = await res4.json();	
+			jobs=a.jobs
+			idt=a.idt
+			tags=a.tags
         }
-        return { pvc,idt,tags };
+        return { pvc,idt,tags,its,jobs};
 	}
 </script>
 
@@ -21,14 +24,14 @@
 	import {stores} from '@sapper/app'
     import { getContext } from 'svelte'
 	import Item from './_Item.svelte'
-
-    export let pvc,idt,tags
-    let caret=true, city=[], dist=[],sidt=[]
+	import ThirdNav from '../../components/ThirdNav.svelte'
+	export let pvc,idt,tags,its,jobs
+    let caret=true, city=[], dist=[],sidt=[],job2=[],job3=[],job4=[]
     let pc=undefined, cc=undefined, dc=undefined
     let pay=["1K以下","1K-2K","2K-4K","4K-6K","6K-8K","8K-10K","10K-15K","15K-25K","25K-35K","35K-50K","50K以上"]
 	const navs$ = getContext('navs')
   	$: navs = $navs$
-	//$: console.log(JSON.stringify(pc))
+	//$: console.log(JSON.stringify(jobs))
 
 	const { page } = stores()
 	//$: console.log($page)
@@ -61,6 +64,9 @@
     }
     const inl=(id)=>{
         sidt=idt.filter(i=>i.parent_id===id)
+	}
+	const onSelect=(id)=>{
+		console.log(id,'-------------fdgdfg--------------')
 	}
 </script>
 
@@ -116,23 +122,8 @@
         </div>
         {/if}
 		</div>
-		<div class="bg-light p-3 rounded mt-3">
-			<div class=" ">
-				<span class="mt-1 font-weight-bold">行业：</span>
-                <a href=" " class="text-dark d-inline-block py-1 pr-5 mnv active">不限</a>
-                {#each idt.filter(i=>i.parent_id===0) as {id,name}  }
-                <a href=" " on:click|preventDefault="{()=>inl(id)}" class="text-dark d-inline-block py-1 pr-5 mnv ">{name}</a>	
-                {/each}
-            </div>
-            {#if sidt.length>0}
-			<div class="border-top border-warning pt-2">
-                <a href=" " class="text-dark d-inline-block py-1 pr-5 mnv active">不限</a>
-                {#each sidt as {id,name}}
-				<a href=" " class="text-dark d-inline-block py-1 pr-5 mnv">{name}</a>
-				{/each}
-            </div>
-            {/if}
-		</div>
+		<ThirdNav tnvs={jobs} label={"职位类别"} onSelect={onSelect} />
+		<ThirdNav tnvs={idt} label={"行业"} onSelect={onSelect} />
 		<div class="bg-light p-3 rounded mt-3">
 			<span class="mt-1 font-weight-bold">月薪：</span>
 			<a href=" " class="text-dark d-inline-block py-1 px-2 mnv active">不限</a>	
@@ -193,13 +184,12 @@
 	</div>
 </div>
 <div class="raw pl-sm-3 pl-md-0">
-	{#each [1,2,3] as i}
-		<Item {i} />
+	{#each its as it}
+		<Item {it} />
 	{:else}
 		<p class="font-weight-light text-warning">加载中 ... </p>
 	{/each}
 </div>
-
 
 <div class="d-flex justify-content-center">
 	<nav aria-label="Page navigation example">
