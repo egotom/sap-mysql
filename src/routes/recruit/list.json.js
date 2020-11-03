@@ -1,10 +1,33 @@
 import db from '../../mysql.js';
 
-const related = async(pid)=>{
-	const rows = await query('select * from im_user')
+const get_ids = async(startIndex,limit)=>{
+	try{
+		const rows = await new Promise((res, rej) => {
+            db.query('SELECT id FROM product WHERE pub_catalog =2 ORDER BY update_at DESC LIMIT ?,?',[startIndex,3*limit], (err, row) => {
+                if (err) return rej(err);
+                res(row);
+            })
+        })
+		//console.log(rows,'-----------------------')
+		return rows
+	}catch (e) {
+      console.log(JSON.stringify(e),'++++++++++++++++++')
+    }
+	
 }
 export function get(req, res) {
-	db.query(`SELECT p.id+105 AS pid ,0 AS nid, p.title, p.owner_id as vid, u.name FROM product p LEFT JOIN user u ON u.id=p.owner_id  WHERE p.pub_catalog=2
+	const page = parseInt(req.query.page)
+    const limit = parseInt(req.query.limit)
+
+    const startIndex = (page - 1) * limit
+    const endIndex = page * limit
+	get_ids(startIndex,limit).then((ids)=>{
+		console.log(ids,'-----------------------')
+	})
+	
+    const results = {}
+	db.query(`SELECT p.id+105 AS pid ,0 AS nid, p.title, p.owner_id as vid, u.name FROM product p LEFT JOIN user u ON u.id=p.owner_id  
+	WHERE p.pub_catalog=2
 	UNION
 	
 	SELECT pv.pid+105, pv.nid, an.name,pv.vid,pv.val FROM attribute_name an right JOIN (
@@ -33,7 +56,7 @@ export function get(req, res) {
 								it.owner_id=rs[j].vid
 							}
 							else if(rs[j].nid===-1) it.tags.push(rs[j].name)
-							else it.attr.push({n:rs[j].title,v:rs[j].name,id:rs[j].vid})
+							else it.attr.push({nid:rs[j].nid, n:rs[j].title,v:rs[j].name,vid:rs[j].vid})
 						}
 					}
 					done.push(rst[i].pid)

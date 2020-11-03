@@ -2,7 +2,7 @@
     export let tnvs, onSelect,label
     let pnv=tnvs.filter(i=>i.parent_id===0)
     //console.log(JSON.stringify(pnv[0].name))
-    let sub=[],s2=[],s3=[],s4=[],s5=[]
+    let sub=[],s2=[],s3=[],s4=[], s5=[]
     let ni, si, i2, i3, i4, i5
     const onNext=(l,id)=>{
         onSelect(id)        
