@@ -13,9 +13,9 @@ export function get(req, res) {
 		SELECT 0 AS aid, ' ' AS name, t.id AS vid, t.title AS val  
 		FROM product_tag pt LEFT JOIN tags t ON t.id=pt.tid WHERE pt.pid=?
 		UNION
-		SELECT -1 AS aid, ' ' AS NAME , p.id+105 AS vid,  p.title AS val   FROM product p 
+		(SELECT -1 AS aid, ' ' AS name , p.id+105 AS vid,  p.title AS val   FROM product p 
 		inner JOIN product pp ON p.pub_catalog=pp.pub_catalog 
-		WHERE  pp.id=? AND p.owner_id=pp.owner_id AND p.id != pp.id;`, [slug-105, slug-105, slug-105], (err,results)=>{
+		WHERE  pp.id=? AND p.owner_id=pp.owner_id AND p.id != ? limit 10);`, [slug-105, slug-105, slug-105, slug-105], (err,results)=>{
 			if(err){
 				console.log(err);
 				res.status(500).end()

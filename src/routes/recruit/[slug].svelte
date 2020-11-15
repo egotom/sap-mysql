@@ -28,6 +28,7 @@
 					addr= ret.substr(0,ret.length-2)
 				}
 			}
+			//console.log(JSON.stringify(data2))
 			return { post: data , exp, edu, count, wages, welfare, other,related,addr};
 		} else {
 			this.error(res.status, data.message);
@@ -62,9 +63,9 @@
 	</div>
 </div>
 <div class="py-4 px-2 bg-light rounded">
-	<!--p class="font-weight-light text-info ml-2 ">该作者发布的其他职位：</p-->
+	<p class="font-weight-light text-info ml-3 mb-1">该雇主发布的其他职位：</p>
 	{#each other as {id,val}}
-	<a href="recruit/{id}" class="d-inline-block mx-2">{val}</a>
+	<a href="recruit/{id}" class="d-inline-block mx-3">{val}</a>
 	{/each}
 </div>
 <p class="pt-5 mb-0 pb-0 font-weight-bold">职位描述：</p>

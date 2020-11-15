@@ -5,9 +5,9 @@
         if (res.status === 200) {
 			pvc = await res.json();			
         }
-		let res4 = await this.fetch(`recruit/list.json?page=1&limit=10`)
+		let res4 = await this.fetch(`recruit/list.json?page=1`)
         if (res4.status === 200) {
-			its = await res4.json();			
+			its = await res4.json();
 		}
 		res4 = await this.fetch(`res.json?ijt=1`)
         if (res4.status === 200) {
@@ -25,8 +25,11 @@
     import { getContext } from 'svelte'
 	import Item from './_Item.svelte'
 	import ThirdNav from '../../components/ThirdNav.svelte'
+	import Pagination from '../../components/Pagination.svelte'
 	export let pvc,idt,tags,its,jobs
-    let caret=true, city=[], dist=[],sidt=[],job2=[],job3=[],job4=[]
+	let caret=false, city=[], dist=[]
+	$: lst =its.its 
+	$: pgn=its.pgn
     let pc=undefined, cc=undefined, dc=undefined
     let pay=["1K以下","1K-2K","2K-4K","4K-6K","6K-8K","8K-10K","10K-15K","15K-25K","25K-35K","35K-50K","50K以上"]
 	const navs$ = getContext('navs')
@@ -68,6 +71,17 @@
 	const onSelect=(id)=>{
 		console.log(id,'-------------fdgdfg--------------')
 	}
+
+	const pgnv=(pg)=>{		
+		fetch(`recruit/list.json?page=${pg}`)
+		.then(res=>res.json())
+		.then(res=>{
+			lts=res
+			lst=res.its
+			pgn=res.pgn
+			//console.log(JSON.stringify(res))
+		})
+	}
 </script>
 
 <svelte:head>
@@ -90,7 +104,7 @@
 		{/if}
 	</a>
 </div>
-<div class="collapse show row mb-3" id="focus">
+<div class="collapse row mb-3" id="focus">
 	<div class="card card-body bg-white">
 		<div class="custom-control custom-checkbox pb-3 pl-5 pr-3 d-flex justify-content-end">
 			<input type="checkbox" class="custom-control-input cros" id="customCheck3">
@@ -184,13 +198,13 @@
 	</div>
 </div>
 <div class="raw pl-sm-3 pl-md-0">
-	{#each its as it}
+	{#each lst as it}
 		<Item {it} />
 	{:else}
 		<p class="font-weight-light text-warning">加载中 ... </p>
 	{/each}
 </div>
-
+<Pagination pgn={pgn} handler={pgnv}/>
 <style>
 	.mnv:hover{text-decoration:none; color:#007bff!important;}
 	.active{color:#007bff!important;}
